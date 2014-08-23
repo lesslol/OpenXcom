@@ -43,6 +43,11 @@ OptionsModsListH: 130 # 136
 OptionsTooltipY: 144 # 148
 OptionsTooltipH: 30 # 25
 
+# Pause 52
+PauseSaveY: 76 #74
+PauseAbandonY: 100 #96
+PauseOptionsY: 124 #122
+
 # Geoscape
 GeoscapeHourX: -61 # -61
 GeoscapeHourY: -25 # -26
@@ -83,6 +88,14 @@ UfoDetectedInfo2H: 40 # 32
 UfoDetectedInterceptY: 122 # 118
 UfoDetectedCentreY: 136 # 134
 UfoDetectedCancelY: 150 # 150
+UfoDetectedInterceptHyperY: 140 #136
+UfoDetectedCentreHyperY: 154 #152
+UfoDetectedCancelHyperY: 168 #168
+UfoDetectedDetectedHyperY: 36 #36
+UfoDetectedHyperX: 50 #21
+UfoDetectedHyperY: 44 #44
+UfoDetectedHyperW: 150 #214
+UfoDetectedInfoHyperY: 56 #60
 
 # Intercept
 InterceptCraftY: 62 #70
@@ -135,20 +148,20 @@ LowFuelMsgY: 88 #90
 LowFuelMsgH: 20 #17
 
 # Inventory
-InvenTusX: 243 # 245
-InvenWeightX: 243 # 245
-InvenFAccX: 243 # 245
+InvenTusX: 242 # 245
+InvenWeightX: 242 # 245
+InvenFAccX: 242 # 245
 InvenFAccY: 34 # 32
-InvenReactX: 243 # 245
+InvenReactX: 242 # 245
 InvenReactY: 44 # 40
-InvenPSkillX: 243 # 245
+InvenPSkillX: 242 # 245
 InvenPSkillY: 54 # 48
-InvenPStrX: 243 # 245
+InvenPStrX: 242 # 245
 InvenPStrY: 64 # 56
 InvenAmmoX: 280 # 254
-InvenAmmoY: 64 # 64
+InvenAmmoY: 59 # 64
 InvenAmmoW: 40 # 66
-InvenAmmoH: 20 # 24
+InvenAmmoH: 30 # 24
 InvenItemY: 140 # 140
 
 # CannotReequip
@@ -167,6 +180,11 @@ BaseFundsY: 26 # 24
 PlaceFacilityCostY: 72 #70
 PlaceFacilityTimeY: 100 #98
 PlaceFacilityMaintenanceY: 128 #126
+
+# BuildFacilities
+BuildFacilitiesTitleY: 47 #48
+BuildFacilitiesListY: 63 #64
+BuildFacilitiesListH: 110 #104
 
 # DismantleFacility
 DismantleFacilityFacilityY: 86 #85

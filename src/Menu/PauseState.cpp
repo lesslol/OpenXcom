@@ -59,9 +59,9 @@ PauseState::PauseState(OptionsOrigin origin) : _origin(origin)
 	// Create objects
 	_window = new Window(this, 216, 160, x, 20, POPUP_BOTH);
 	_btnLoad = new TextButton(180, 18, x+18, 52);
-	_btnSave = new TextButton(180, 18, x+18, 74);
-	_btnAbandon = new TextButton(180, 18, x+18, 96);
-	_btnOptions = new TextButton(180, 18, x+18, 122);
+	_btnSave = new TextButton(180, 18, x+18, tr(74,"PauseSaveY"));
+	_btnAbandon = new TextButton(180, 18, x+18, tr(96,"PauseAbandonY"));
+	_btnOptions = new TextButton(180, 18, x+18, tr(122,"PauseOptionsY"));
 	_btnCancel = new TextButton(180, 18, x+18, 150);
 	_txtTitle = new Text(206, 17, x+5, 32);
 

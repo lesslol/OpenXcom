@@ -73,19 +73,19 @@ UfoDetectedState::UfoDetectedState(Ufo *ufo, GeoscapeState *state, bool detected
 	_btnCentre = new TextButton(200, 12, 28, tr(134, "UfoDetectedCentreY"));
 	_btnCancel = new TextButton(200, 12, 28, tr(150, "UfoDetectedCancelY"));
 	_txtUfo = new Text(207, 17, 28, 53);
-	_txtDetected = new Text(100, 9, 28, 69);
-	_txtHyperwave = new Text(214, 17, 21, 44);
+	_txtDetected = new Text(100, tr(9,"TextSmallH"), 28, 69);
+	_txtHyperwave = new Text(tr(214,"UfoDetectedHyperW"), 17, tr(21,"UfoDetectedHyperX"), tr(44,"UfoDetectedHyperY"));
 	_lstInfo = new TextList(207, tr(32, "UfoDetectedInfoH"), 28, 80);
 	_lstInfo2 = new TextList(207, tr(32, "UfoDetectedInfo2H"), 28, 96);
 
 	if (hyperwave)
 	{
-		_btnIntercept->setY(136);
-		_btnCentre->setY(152);
-		_btnCancel->setY(168);
+		_btnIntercept->setY(tr(136,"UfoDetectedInterceptHyperY"));
+		_btnCentre->setY(tr(152,"UfoDetectedCentreHyperY"));
+		_btnCancel->setY(tr(168,"UfoDetectedCancelHyperY"));
 		_txtUfo->setY(20);
-		_txtDetected->setY(36);
-		_lstInfo->setY(60);
+		_txtDetected->setY(tr(36,"UfoDetectedDetectedHyperY"));
+		_lstInfo->setY(tr(60,"UfoDetectedInfoHyperY"));
 	}
 	else
 	{

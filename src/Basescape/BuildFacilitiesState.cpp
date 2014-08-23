@@ -47,8 +47,8 @@ BuildFacilitiesState::BuildFacilitiesState(Base *base, State *state) : _base(bas
 	// Create objects
 	_window = new Window(this, 128, 160, 192, 40, POPUP_VERTICAL);
 	_btnOk = new TextButton(112, 16, 200, 176);
-	_lstFacilities = new TextList(100, 104, 200, 64);
-	_txtTitle = new Text(118, 17, 197, 48);
+	_lstFacilities = new TextList(100, tr(104,"BuildFacilitiesListH"), 200, tr(64,"BuildFacilitiesListY"));
+	_txtTitle = new Text(118, 17, 197, tr(48,"BuildFacilitiesTitleY"));
 
 	// Set palette
 	setPalette("PAL_BASESCAPE", 6);
