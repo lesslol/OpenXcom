@@ -174,18 +174,18 @@ void BaseDefenseState::nextStep()
 			_action = BDA_FIRE;
 			return;
 		case BDA_FIRE:
-			_lstDefenses->setCellText(_row, 1, tr("STR_FIRING").c_str());
+			_lstDefenses->setCellText(_row, 1, tr("STR_FIRING"));
 			_game->getResourcePack()->getSound("GEO.CAT", (def)->getRules()->getFireSound())->play();
 			_action = BDA_RESOLVE;
 			return;
 		case BDA_RESOLVE:
 			if (!RNG::percent((def)->getRules()->getHitRatio()))
 			{
-				_lstDefenses->setCellText(_row, 2, tr("STR_MISSED").c_str());
+				_lstDefenses->setCellText(_row, 2, tr("STR_MISSED"));
 			}
 			else
 			{
-				_lstDefenses->setCellText(_row, 2, tr("STR_HIT").c_str());
+				_lstDefenses->setCellText(_row, 2, tr("STR_HIT"));
 				_game->getResourcePack()->getSound("GEO.CAT", (def)->getRules()->getHitSound())->play();
 				_ufo->setDamage(_ufo->getDamage() + (def)->getRules()->getDefenseValue());
 			}

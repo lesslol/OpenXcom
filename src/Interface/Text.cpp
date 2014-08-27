@@ -174,7 +174,7 @@ void Text::setText(const std::wstring &text)
  * Returns the string displayed on screen.
  * @return Text string.
  */
-std::wstring Text::getText() const
+const std::wstring &Text::getText() const
 {
 	return _text;
 }

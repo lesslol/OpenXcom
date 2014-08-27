@@ -94,6 +94,7 @@ CraftWeaponsState::CraftWeaponsState(Base *base, size_t craft, size_t weapon) : 
 	_txtAmmunition->setColor(Palette::blockOffset(15)+6);
 	_txtAmmunition->setText(tr("STR_AMMUNITION_AVAILABLE"));
 	_txtAmmunition->setWordWrap(true);
+	_txtAmmunition->setVerticalAlign(ALIGN_BOTTOM);
 
 	_lstWeapons->setColor(Palette::blockOffset(13)+10);
 	_lstWeapons->setArrowColor(Palette::blockOffset(15)+6);

@@ -86,7 +86,7 @@ public:
 	/// Sets the text color of a certain row.
 	void setRowColor(size_t row, Uint8 color);
 	/// Gets the text of a certain cell.
-	std::wstring getCellText(size_t row, size_t column) const;
+	const std::wstring &getCellText(size_t row, size_t column) const;
 	/// Sets the text of a certain cell.
 	void setCellText(size_t row, size_t column, const std::wstring &text);
 	/// Gets the X position of a certain column.

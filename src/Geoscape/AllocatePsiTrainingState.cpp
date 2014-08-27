@@ -54,8 +54,8 @@ AllocatePsiTrainingState::AllocatePsiTrainingState(Base *base) : _sel(0)
 	_txtPsiStrength = new Text(80, 20, 124, 32);
 	_txtPsiSkill = new Text(80, 20, 188, 32);
 	_txtTraining = new Text(48, 20, 270, 32);
-	_btnOk = new TextButton(160, 14, 80, 174);
-	_lstSoldiers = new TextList(290, 112, 8, 52);
+	_btnOk = new TextButton(160, 14, 80, tr(174,"PsiTrainingOkY"));
+	_lstSoldiers = new TextList(290, tr(112,"PsiTrainingListH"), 8, 52);
 
 	// Set palette
 	setPalette("PAL_BASESCAPE", 7);
@@ -176,7 +176,7 @@ void AllocatePsiTrainingState::lstSoldiersClick(Action *action)
 		{
 			if (_base->getUsedPsiLabs() < _base->getAvailablePsiLabs())
 			{
-				_lstSoldiers->setCellText(_sel, 3, tr("STR_YES").c_str());
+				_lstSoldiers->setCellText(_sel, 3, tr("STR_YES"));
 				_lstSoldiers->setRowColor(_sel, Palette::blockOffset(13)+5);
 				_labSpace--;
 				_txtRemaining->setText(tr("STR_REMAINING_PSI_LAB_CAPACITY").arg(_labSpace));
@@ -185,7 +185,7 @@ void AllocatePsiTrainingState::lstSoldiersClick(Action *action)
 		}
 		else
 		{
-			_lstSoldiers->setCellText(_sel, 3, tr("STR_NO").c_str());
+			_lstSoldiers->setCellText(_sel, 3, tr("STR_NO"));
 			_lstSoldiers->setRowColor(_sel, Palette::blockOffset(15)+6);
 			_labSpace++;
 			_txtRemaining->setText(tr("STR_REMAINING_PSI_LAB_CAPACITY").arg(_labSpace));

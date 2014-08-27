@@ -218,7 +218,7 @@ void CraftSoldiersState::moveSoldierUp(Action *action, unsigned int row, bool ma
 		_base->getSoldiers()->at(row - 1) = s;
 		if (row != _lstSoldiers->getScroll())
 		{
-			SDL_WarpMouse(action->getLeftBlackBand() + action->getXMouse(), action->getTopBlackBand() + action->getYMouse() - static_cast<Uint16>(8 * action->getYScale()));
+			SDL_WarpMouse(action->getLeftBlackBand() + action->getXMouse(), action->getTopBlackBand() + action->getYMouse() - static_cast<Uint16>(tr(8,"TextSmallH") * action->getYScale()));
 		}
 		else
 		{
@@ -270,7 +270,7 @@ void CraftSoldiersState::moveSoldierDown(Action *action, unsigned int row, bool 
 		_base->getSoldiers()->at(row + 1) = s;
 		if (row != _lstSoldiers->getVisibleRows() - 1 + _lstSoldiers->getScroll())
 		{
-			SDL_WarpMouse(action->getLeftBlackBand() + action->getXMouse(), action->getTopBlackBand() + action->getYMouse() + static_cast<Uint16>(8 * action->getYScale()));
+			SDL_WarpMouse(action->getLeftBlackBand() + action->getXMouse(), action->getTopBlackBand() + action->getYMouse() + static_cast<Uint16>(tr(8,"TextSmallH") * action->getYScale()));
 		}
 		else
 		{

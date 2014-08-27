@@ -147,19 +147,24 @@ MonthlyReportDescY: 44 #40
 LowFuelMsgY: 88 #90
 LowFuelMsgH: 20 #17
 
+# AllocatePsiTraining
+PsiTrainingListH: 120 #112
+PsiTrainingOkY: 180 #174
+
 # Inventory
-InvenTusX: 242 # 245
-InvenWeightX: 242 # 245
-InvenFAccX: 242 # 245
+InvenShortW: 50 #40
+InvenTusX: 243 # 245
+InvenWeightX: 243 # 245
+InvenFAccX: 243 # 245
 InvenFAccY: 34 # 32
-InvenReactX: 242 # 245
+InvenReactX: 243 # 245
 InvenReactY: 44 # 40
-InvenPSkillX: 242 # 245
+InvenPSkillX: 243 # 245
 InvenPSkillY: 54 # 48
-InvenPStrX: 242 # 245
+InvenPStrX: 243 # 245
 InvenPStrY: 64 # 56
 InvenAmmoX: 280 # 254
-InvenAmmoY: 59 # 64
+InvenAmmoY: 60 # 64
 InvenAmmoW: 40 # 66
 InvenAmmoH: 30 # 24
 InvenItemY: 140 # 140
@@ -292,6 +297,10 @@ SellItemsH: 120 #112
 # TransferItems
 TransferItemsListH: 130 #120
 
+# ManageAlienContainment
+ManageAlienContainmentItemY: 40 #41
+ManageAlienContainmentLivesW: 84 #54
+
 # UfopaediaSelect
 UfopaediaSelectListH: 110 #104
 
@@ -315,4 +324,3 @@ ArticleVehicleInfoH: 50 #150
 # Debriefing
 DebriefingStatsY: 34 #32
 DebriefingRatingY: 181 #180
-

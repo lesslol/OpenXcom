@@ -175,7 +175,7 @@ void TextList::setRowColor(size_t row, Uint8 color)
  * @param column Column number.
  * @return Text string.
  */
-std::wstring TextList::getCellText(size_t row, size_t column) const
+const std::wstring &TextList::getCellText(size_t row, size_t column) const
 {
 	return _texts[row][column]->getText();
 }
@@ -325,7 +325,7 @@ void TextList::addRow(int cols, ...)
 			shape1 = ARROW_SMALL_LEFT;
 			shape2 = ARROW_SMALL_RIGHT;
 		}
-		ArrowButton *a1 = new ArrowButton(shape1, 11, 8, getX() + _arrowPos, getY());
+		ArrowButton *a1 = new ArrowButton(shape1, 11, _small->getHeight() + _small->getSpacing(), getX() + _arrowPos, getY());
 		a1->setListButton();
 		a1->setPalette(this->getPalette());
 		a1->setColor(_up->getColor());
@@ -333,7 +333,7 @@ void TextList::addRow(int cols, ...)
 		a1->onMousePress(_leftPress);
 		a1->onMouseRelease(_leftRelease);
 		_arrowLeft.push_back(a1);
-		ArrowButton *a2 = new ArrowButton(shape2, 11, 8, getX() + _arrowPos + 12, getY());
+		ArrowButton *a2 = new ArrowButton(shape2, 11, _small->getHeight() + _small->getSpacing(), getX() + _arrowPos + 12, getY());
 		a2->setListButton();
 		a2->setPalette(this->getPalette());
 		a2->setColor(_up->getColor());

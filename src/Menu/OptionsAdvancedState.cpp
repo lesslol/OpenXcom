@@ -259,7 +259,7 @@ void OptionsAdvancedState::lstOptionsClick(Action *action)
 		ss << *i;
 		settingText = ss.str();
 	}
-	_lstOptions->setCellText(sel, 1, settingText.c_str());
+	_lstOptions->setCellText(sel, 1, settingText);
 }
 
 void OptionsAdvancedState::lstOptionsMouseOver(Action *)

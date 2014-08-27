@@ -104,12 +104,12 @@ void OptionsModsState::lstModsClick(Action *action)
 	bool modEnabled = (i != Options::rulesets.end());
 	if (modEnabled)
 	{
-		_lstMods->setCellText(_lstMods->getSelectedRow(), 1, tr("STR_NO").c_str());
+		_lstMods->setCellText(_lstMods->getSelectedRow(), 1, tr("STR_NO"));
 		Options::rulesets.erase(i);
 	}
 	else
 	{
-		_lstMods->setCellText(_lstMods->getSelectedRow(), 1, tr("STR_YES").c_str());
+		_lstMods->setCellText(_lstMods->getSelectedRow(), 1, tr("STR_YES"));
 		Options::rulesets.push_back(selectedMod);
 	}
 	Options::reload = true;

@@ -77,7 +77,7 @@ public:
 	/// Sets the text's string.
 	void setText(const std::wstring &text);
 	/// Gets the text's string.
-	std::wstring getText() const;
+	const std::wstring &getText() const;
 	/// Sets the text's wordwrap setting.
 	void setWordWrap(bool wrap, bool indent = false);
 	/// Sets the text's color invert setting.

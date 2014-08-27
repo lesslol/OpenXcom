@@ -69,10 +69,10 @@ ManageAlienContainmentState::ManageAlienContainmentState(Base *base, OptionsOrig
 	_btnOk = new TextButton(_overCrowded? 288:148, 16, _overCrowded? 16:8, 176);
 	_btnCancel = new TextButton(148, 16, 164, 176);
 	_txtTitle = new Text(310, 17, 5, 8);
-	_txtAvailable =  new Text(190, 9, 10, 24);
-	_txtUsed = new Text(110, 9, 136, 24);
-	_txtItem = new Text(120, 9, 10, 41);
-	_txtLiveAliens = new Text(54, 18, 136, 32);
+	_txtAvailable =  new Text(190, tr(9,"TextSmallH"), 10, 24);
+	_txtUsed = new Text(110, tr(9,"TextSmallH"), 136, 24);
+	_txtItem = new Text(120, tr(9,"TextSmallH"), 10, tr(41,"ManageAlienContainmentItemY"));
+	_txtLiveAliens = new Text(tr(54,"ManageAlienContainmentLivesW"), 18, 136, 32);
 	_txtDeadAliens = new Text(54, 18, 220, 32);
 	_lstAliens = new TextList(280, 112, 8, 53);
 
