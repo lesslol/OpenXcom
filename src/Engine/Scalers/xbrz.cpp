@@ -190,7 +190,7 @@ void rgbtoLuv(uint32_t c, double& L, double& u, double& v)
     if ( var_Y > 0.008856 ) var_Y = std::pow(var_Y , 1.0/3 );
     else                    var_Y =  7.787 * var_Y  +  16.0 / 116;
 
-    const double ref_X =  95.047;        //Observer= 2°, Illuminant= D65
+    const double ref_X =  95.047;        //Observer= 2Â°, Illuminant= D65
     const double ref_Y = 100.000;
     const double ref_Z = 108.883;
 
@@ -226,7 +226,7 @@ void rgbtoLab(uint32_t c, unsigned char& L, signed char& A, signed char& B)
     double z = 0.0193339 * r + 0.1191920 * g + 0.9503041 * b;
     //------XYZ to Lab------
     const double refX = 95.047;  //
-    const double refY = 100.000; //Observer= 2°, Illuminant= D65
+    const double refY = 100.000; //Observer= 2Â°, Illuminant= D65
     const double refZ = 108.883; //
     double var_X = x / refX;
     double var_Y = y / refY;
@@ -627,7 +627,7 @@ void scalePixel(const Kernel_3x3& ker,
 		const bool doLineBlend = (
 			(getBottomR(blend) >= BLEND_DOMINANT) || !(
 			//make sure there is no second blending in an adjacent rotation for this pixel: handles insular pixels, mario eyes
-			(getTopR(blend) != BLEND_NONE && !eq(e, g, cfg)) || //but support double-blending for 90° corners
+			(getTopR(blend) != BLEND_NONE && !eq(e, g, cfg)) || //but support double-blending for 90Â° corners
 			(getBottomL(blend) != BLEND_NONE && !eq(e, c, cfg)) ||
 			//no full blending for L-shapes; blend corner only (handles "mario mushroom eyes")
 			(eq(g, h, cfg) && eq(h, i, cfg) && eq(i, f, cfg) && eq(f, c, cfg) && !eq(e, i, cfg))
