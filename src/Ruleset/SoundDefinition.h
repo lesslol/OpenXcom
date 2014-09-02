@@ -16,42 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with OpenXcom.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef OPENXCOM_SOUND_H
-#define OPENXCOM_SOUND_H
+#ifndef OPENXCOM_SOUNDDEF_H
+#define OPENXCOM_SOUNDDEF_H
 
-#include <SDL_mixer.h>
+#include <yaml-cpp/yaml.h>
+#include <vector>
 #include <string>
 
 namespace OpenXcom
 {
-
-/**
- * Container for sound effects.
- * Handles loading and playing various formats through SDL_mixer.
- */
-class Sound
+class SoundDefinition
 {
 private:
-	Mix_Chunk *_sound;
+	std::string _type;
+	std::string _catFile;
+	std::vector<int> _soundList;
 public:
-	/// Creates a blank sound effect.
-	Sound();
-	/// Cleans up the sound effect.
-	~Sound();
-	/// Loads sound from the specified file.
-	void load(const std::string &filename);
-	/// Loads sound from a chunk of memory.
-	void load(const void *data, unsigned int size);
-	/// Plays the sound.
-	void play(int channel = -1, int angle = 0, int distance = 0) const;
-	/// Stops all sounds.
-	static void stop();
-	/// Plays the sound repeatedly.
-	void loop();
-	/// Stops the looping sound effect.
-	void stopLoop();
+	SoundDefinition(const std::string &type);
+	~SoundDefinition();
+	void load(const YAML::Node &node);
+	const std::vector<int> &getSoundList() const;
+	const std::string getCATFile() const;
+
 };
 
 }
-
 #endif

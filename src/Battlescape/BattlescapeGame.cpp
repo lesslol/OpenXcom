@@ -252,7 +252,7 @@ void BattlescapeGame::handleAI(BattleUnit *unit)
 	{
 		if (unit->getAggroSound() != -1 && !_playedAggroSound)
 		{
-			getResourcePack()->getSound("BATTLE.CAT", unit->getAggroSound())->play();
+			getResourcePack()->getSoundByDepth(_save->getDepth(), unit->getAggroSound())->play();
 			_playedAggroSound = true;
 		}
 	}
@@ -375,9 +375,9 @@ void BattlescapeGame::endTurn()
 	_currentAction.targeting = false;
 	_AISecondMove = false;
 
-	if (_save->getTileEngine()->closeUfoDoors())
+	if (_save->getTileEngine()->closeUfoDoors() && ResourcePack::SLIDING_DOOR_CLOSE != -1)
 	{
-		getResourcePack()->getSound("BATTLE.CAT", 21)->play(); // ufo door closed
+		getResourcePack()->getSoundByDepth(_save->getDepth(), ResourcePack::SLIDING_DOOR_CLOSE)->play(); // ufo door closed
 	}
 
 	// check for hot grenades on the ground
@@ -1098,7 +1098,7 @@ bool BattlescapeGame::handlePanickingUnit(BattleUnit *unit)
 		if (_save->getTile(ba.target) != 0)
 		{
 			ba.weapon = unit->getMainHandWeapon();
-			if(ba.weapon)
+			if(ba.weapon && (_save->getDepth() != 0 || ba.weapon->getRules()->isWaterOnly() == false))
 			{
 				if (ba.weapon->getRules()->getBattleType() == BT_FIREARM)
 				{
@@ -1231,7 +1231,7 @@ void BattlescapeGame::primaryAction(const Position &pos)
 				{
 					if (_currentAction.actor->spendTimeUnits(_currentAction.TU))
 					{
-						_parentState->getGame()->getResourcePack()->getSound("BATTLE.CAT", _currentAction.weapon->getRules()->getHitSound())->play();
+						_parentState->getGame()->getResourcePack()->getSoundByDepth(_save->getDepth(), _currentAction.weapon->getRules()->getHitSound())->play();
 						_parentState->getGame()->pushState (new UnitInfoState(_save->selectUnit(pos), _parentState, false, true));
 						cancelCurrentAction();
 					}
@@ -2053,6 +2053,9 @@ bool BattlescapeGame::checkForProximityGrenades(BattleUnit *unit)
 	return false;
 }
 
+/**
+ * Cleans up all the deleted states.
+ */
 void BattlescapeGame::cleanupDeleted()
 {
 	for (std::list<BattleState*>::iterator i = _deleted.begin(); i != _deleted.end(); ++i)
@@ -2060,6 +2063,15 @@ void BattlescapeGame::cleanupDeleted()
 		delete *i;
 	}
 	_deleted.clear();
+}
+
+/**
+ * Gets the depth of the battlescape.
+ * @return the depth of the battlescape.
+ */
+const int BattlescapeGame::getDepth() const
+{
+	return _save->getDepth();
 }
 
 }

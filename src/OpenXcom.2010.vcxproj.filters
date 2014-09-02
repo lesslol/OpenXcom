@@ -865,6 +865,12 @@
     <ClCompile Include="Ruleset\Polyline.cpp">
       <Filter>Ruleset</Filter>
     </ClCompile>
+    <ClCompile Include="Ruleset\SoundDefinition.cpp">
+      <Filter>Ruleset</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Scalers\xbrz.cpp">
+      <Filter>Engine\Scalers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -1751,6 +1757,15 @@
     </ClInclude>
     <ClInclude Include="Ruleset\Polyline.h">
       <Filter>Ruleset</Filter>
+    </ClInclude>
+    <ClInclude Include="Ruleset\SoundDefinition.h">
+      <Filter>Ruleset</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Scalers\xbrz.h">
+      <Filter>Engine\Scalers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Scalers\config.h">
+      <Filter>Engine\Scalers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

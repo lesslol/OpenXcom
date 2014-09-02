@@ -598,7 +598,7 @@ void InventoryState::btnCreateTemplateClick(Action *action)
 	}
 
 	// give audio feedback
-	_game->getResourcePack()->getSound("BATTLE.CAT", 38)->play();
+	_game->getResourcePack()->getSoundByDepth(_battleGame->getDepth(), ResourcePack::ITEM_DROP)->play();
 	_refreshMouse();
 }
 
@@ -732,7 +732,7 @@ void InventoryState::btnApplyTemplateClick(Action *action)
 	_refreshMouse();
 
 	// give audio feedback
-	_game->getResourcePack()->getSound("BATTLE.CAT", 38)->play();
+	_game->getResourcePack()->getSoundByDepth(_battleGame->getDepth(), ResourcePack::ITEM_DROP)->play();
 }
 
 void InventoryState::_refreshMouse()
@@ -766,7 +766,7 @@ void InventoryState::onClearInventory(Action *action)
 	_refreshMouse();
 
 	// give audio feedback
-	_game->getResourcePack()->getSound("BATTLE.CAT", 38)->play();
+	_game->getResourcePack()->getSoundByDepth(_battleGame->getDepth(), ResourcePack::ITEM_DROP)->play();
 }
 
 /**

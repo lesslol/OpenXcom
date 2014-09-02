@@ -39,6 +39,8 @@
 #include "../Engine/ShaderMove.h"
 #include "../Engine/Exception.h"
 #include "../Engine/Logger.h"
+#include "../Ruleset/Ruleset.h"
+#include "../Ruleset/SoundDefinition.h"
 #include "../Ruleset/ExtraSprites.h"
 #include "../Ruleset/ExtraSounds.h"
 #include "../Engine/AdlibMusic.h"
@@ -73,7 +75,7 @@ struct HairBleach
  * @param extraSprites List of mod extra sprites.
  * @param extraSounds List of mod extra sounds.
  */
-XcomResourcePack::XcomResourcePack(std::vector<std::pair<std::string, ExtraSprites *> > extraSprites, std::vector<std::pair<std::string, ExtraSounds *> > extraSounds) : ResourcePack()
+XcomResourcePack::XcomResourcePack(Ruleset *rules) : ResourcePack()
 {
 	// Load palettes
 	const char *pal[] = {"PAL_GEOSCAPE", "PAL_BASESCAPE", "PAL_GRAPHS", "PAL_UFOPAEDIA", "PAL_BATTLEPEDIA"};
@@ -334,49 +336,79 @@ XcomResourcePack::XcomResourcePack(std::vector<std::pair<std::string, ExtraSprit
 		}
 #endif		
 		
-		// Load sounds
-		std::string catsId[] = {"GEO.CAT", "BATTLE.CAT"};
-		std::string catsDos[] = {"SOUND2.CAT", "SOUND1.CAT"};
-		std::string catsWin[] = {"SAMPLE.CAT", "SAMPLE2.CAT"};
-
-		// Try the preferred format first, otherwise use the default priority
-		std::string *cats[] = {0, catsWin, catsDos};
-		if (Options::preferredSound == SOUND_14)
-			cats[0] = catsWin;
-		else if (Options::preferredSound == SOUND_10)
-			cats[1] = catsDos;
-
-		Options::currentSound = SOUND_AUTO;
-		for (size_t i = 0; i < sizeof(catsId) / sizeof(catsId[0]); ++i)
+		if (rules->getSoundDefinitions()->empty())
 		{
-			SoundSet *sound = 0;
-			for (size_t j = 0; j < sizeof(cats) / sizeof(cats[0]) && sound == 0; ++j)
+			// Load sounds
+			std::string catsId[] = {"GEO.CAT", "BATTLE.CAT"};
+			std::string catsDos[] = {"SOUND2.CAT", "SOUND1.CAT"};
+			std::string catsWin[] = {"SAMPLE.CAT", "SAMPLE2.CAT"};
+
+			// Try the preferred format first, otherwise use the default priority
+			std::string *cats[] = {0, catsWin, catsDos};
+			if (Options::preferredSound == SOUND_14)
+				cats[0] = catsWin;
+			else if (Options::preferredSound == SOUND_10)
+				cats[1] = catsDos;
+
+			Options::currentSound = SOUND_AUTO;
+			for (size_t i = 0; i < sizeof(catsId) / sizeof(catsId[0]); ++i)
 			{
-				bool wav = true;
-				if (cats[j] == 0)
-					continue;
-				else if (cats[j] == catsDos)
-					wav = false;
+				SoundSet *sound = 0;
+				for (size_t j = 0; j < sizeof(cats) / sizeof(cats[0]) && sound == 0; ++j)
+				{
+					bool wav = true;
+					if (cats[j] == 0)
+						continue;
+					else if (cats[j] == catsDos)
+						wav = false;
+					std::ostringstream s;
+					s << "SOUND/" << cats[j][i];
+					std::string file = CrossPlatform::getDataFile(s.str());
+					if (CrossPlatform::fileExists(file))
+					{
+						sound = new SoundSet();
+						sound->loadCat(file, wav);
+						Options::currentSound = (wav) ? SOUND_14 : SOUND_10;
+					}
+				}
+				if (sound == 0)
+				{
+					throw Exception(catsWin[i] + " not found");
+				}
+				else
+				{
+					_sounds[catsId[i]] = sound;
+				}
+			}
+		}
+		else
+		{
+			for (std::map<std::string, SoundDefinition*>::const_iterator i = rules->getSoundDefinitions()->begin();
+				i != rules->getSoundDefinitions()->end(); ++i)
+			{
 				std::ostringstream s;
-				s << "SOUND/" << cats[j][i];
+				s << "SOUND/" << (*i).second->getCATFile();
 				std::string file = CrossPlatform::getDataFile(s.str());
 				if (CrossPlatform::fileExists(file))
 				{
-					sound = new SoundSet();
-					sound->loadCat(file, wav);
-					Options::currentSound = (wav) ? SOUND_14 : SOUND_10;
+					if (_sounds.find((*i).first) == _sounds.end())
+					{
+						_sounds[(*i).first] = new SoundSet();
+					}
+					for (std::vector<int>::const_iterator j = (*i).second->getSoundList().begin(); j != (*i).second->getSoundList().end(); ++j)
+					{
+						_sounds[(*i).first]->loadCatbyIndex(file, *j);
+					}
 				}
-			}
-			if (sound == 0)
-			{
-				throw Exception(catsWin[i] + " not found");
-			}
-			else
-			{
-				_sounds[catsId[i]] = sound;
+				else
+				{
+					s << " not found";
+					throw Exception(s.str());
+				}
 			}
 		}
 		
+
 		if (CrossPlatform::fileExists(CrossPlatform::getDataFile("SOUND/INTRO.CAT")))
 		{
 			SoundSet *s = _sounds["INTRO.CAT"] = new SoundSet();
@@ -390,10 +422,10 @@ XcomResourcePack::XcomResourcePack(std::vector<std::pair<std::string, ExtraSprit
 		}
 	}
 
-	TextButton::soundPress = getSound("GEO.CAT", 0);
-	Window::soundPopup[0] = getSound("GEO.CAT", 1);
-	Window::soundPopup[1] = getSound("GEO.CAT", 2);
-	Window::soundPopup[2] = getSound("GEO.CAT", 3);
+	TextButton::soundPress = getSound("GEO.CAT", ResourcePack::BUTTON_PRESS);
+	Window::soundPopup[0] = getSound("GEO.CAT", ResourcePack::WINDOW_POPUP[0]);
+	Window::soundPopup[1] = getSound("GEO.CAT", ResourcePack::WINDOW_POPUP[1]);
+	Window::soundPopup[2] = getSound("GEO.CAT", ResourcePack::WINDOW_POPUP[2]);
 
 	loadBattlescapeResources(); // TODO load this at battlescape start, unload at battlescape end?
 	
@@ -436,6 +468,7 @@ XcomResourcePack::XcomResourcePack(std::vector<std::pair<std::string, ExtraSprit
 
 	Log(LOG_INFO) << "Loading extra resources from ruleset...";
 	std::ostringstream s;
+	std::vector< std::pair<std::string, ExtraSprites *> >extraSprites = rules->getExtraSprites();
 	for (std::vector< std::pair<std::string, ExtraSprites *> >::const_iterator i = extraSprites.begin(); i != extraSprites.end(); ++i)
 	{
 		std::string sheetName = i->first;
@@ -603,7 +636,8 @@ XcomResourcePack::XcomResourcePack(std::vector<std::pair<std::string, ExtraSprit
 		surface1->setPalette(surface2->getPalette());
 		surface2->blit(surface1);
 	}
-
+	
+	std::vector< std::pair<std::string, ExtraSounds *> >extraSounds = rules->getExtraSounds();
 	for (std::vector< std::pair<std::string, ExtraSounds *> >::const_iterator i = extraSounds.begin(); i != extraSounds.end(); ++i)
 	{
 		std::string setName = i->first;

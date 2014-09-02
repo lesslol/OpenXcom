@@ -256,6 +256,9 @@ set ( engine_src
   Engine/Scalers/hq3x.cpp
   Engine/Scalers/hq4x.cpp
   Engine/Scalers/init.cpp
+  Engine/Scalers/config.h
+  Engine/Scalers/xbrz.h  
+  Engine/Scalers/xbrz.cpp
   Engine/Adlib/adlplayer.cpp
   Engine/Adlib/adlplayer.h
   Engine/Adlib/fmopl.cpp
@@ -505,6 +508,8 @@ set ( ruleset_src
   Ruleset/StatString.cpp
   Ruleset/StatStringCondition.h
   Ruleset/StatStringCondition.cpp
+  Ruleset/SoundDefinition.h
+  Ruleset/SoundDefinition.cpp
   Ruleset/Polygon.h
   Ruleset/Polygon.cpp
   Ruleset/Polyline.h
