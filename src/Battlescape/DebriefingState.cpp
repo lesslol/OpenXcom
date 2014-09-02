@@ -18,6 +18,7 @@
  */
 #include "DebriefingState.h"
 #include "CannotReequipState.h"
+#include "../Engine/Action.h"
 #include "../Engine/Game.h"
 #include "../Engine/Language.h"
 #include "../Engine/Music.h"
@@ -72,7 +73,7 @@ namespace OpenXcom
  * Initializes all the elements in the Debriefing screen.
  * @param game Pointer to the core game.
  */
-DebriefingState::DebriefingState() : _region(0), _country(0), _noContainment(false), _manageContainment(false), _destroyBase(false)
+DebriefingState::DebriefingState() : _region(0), _country(0), _noContainment(false), _manageContainment(false), _destroyBase(false), _showSoldierStats(false)
 {
 	Options::baseXResolution = Options::baseXGeoscape;
 	Options::baseYResolution = Options::baseYGeoscape;
@@ -82,24 +83,45 @@ DebriefingState::DebriefingState() : _region(0), _country(0), _noContainment(fal
 	_game->getCursor()->setVisible(true);
 	_limitsEnforced = Options::storageLimitsEnforced ? 1 : 0;
 
+	int textSmallH = tr(9,"TextSmallH");
 	// Create objects
 	_window = new Window(this, 320, 200, 0, 0);
 	_btnOk = new TextButton(40, 12, 16, 180);
+	_btnStats = new TextButton(40, 12, 264, 180);
 	_txtTitle = new Text(300, 17, 16, 8);
-	_txtItem = new Text(180, tr(9,"TextSmallH"), 16, 24);
-	_txtQuantity = new Text(60, tr(9,"TextSmallH"), 200, 24);
-	_txtScore = new Text(55, tr(9,"TextSmallH"), 270, 24);
-	_txtRecovery = new Text(180, tr(9,"TextSmallH"), 16, 60);
-	_txtRating = new Text(200, tr(9,"TextSmallH"), 64, tr(180,"DebriefingRatingY"));
+	_txtItem = new Text(180, textSmallH, 16, 24);
+	_txtQuantity = new Text(60, textSmallH, 200, 24);
+	_txtScore = new Text(55, textSmallH, 270, 24);
+	_txtRecovery = new Text(180, textSmallH, 16, 60);
+	_txtRating = new Text(200, textSmallH, 64, tr(180,"DebriefingRatingY"));
 	_lstStats = new TextList(290, 80, 16, tr(32,"DebriefingStatsY"));
 	_lstRecovery = new TextList(290, 80, 16, 32);
-	_lstTotal = new TextList(290, tr(9,"TextSmallH"), 16, 12);
+	_lstTotal = new TextList(290, textSmallH, 16, 12);
+
+	// Second page (soldier stats)
+	_txtSoldier     = new Text(90, textSmallH,  16, 24); //16..106 = 90
+	_txtTU          = new Text(18, textSmallH, 106, 24); //106
+	_txtStamina     = new Text(18, textSmallH, 124, 24); //124
+	_txtHealth      = new Text(18, textSmallH, 142, 24); //142
+	_txtBravery     = new Text(18, textSmallH, 160, 24); //160
+	_txtReactions   = new Text(18, textSmallH, 178, 24); //178
+	_txtFiring      = new Text(18, textSmallH, 196, 24); //196
+	_txtThrowing    = new Text(18, textSmallH, 214, 24); //214
+	_txtMelee       = new Text(18, textSmallH, 232, 24); //232
+	_txtStrength    = new Text(18, textSmallH, 250, 24); //250
+	_txtPsiStrength = new Text(18, textSmallH, 268, 24); //268
+	_txtPsiSkill	= new Text(18, textSmallH, 286, 24); //286..304 = 18
+	_lstSoldierStats = new TextList(290, tr(136,"DebriefingSoldiersH"), 16, tr(32,"DebriefingStatsY"));
+	_txtTooltip		= new Text(200, textSmallH, 64, tr(180,"DebriefingRatingY"));
+
+	applyVisibility();
 
 	// Set palette
 	setPalette("PAL_GEOSCAPE", 0);
 
 	add(_window);
 	add(_btnOk);
+	add(_btnStats);
 	add(_txtTitle);
 	add(_txtItem);
 	add(_txtQuantity);
@@ -109,6 +131,21 @@ DebriefingState::DebriefingState() : _region(0), _country(0), _noContainment(fal
 	add(_lstStats);
 	add(_lstRecovery);
 	add(_lstTotal);
+
+	add(_txtSoldier);
+	add(_txtTU);
+	add(_txtStamina);
+	add(_txtHealth);
+	add(_txtBravery);
+	add(_txtReactions);
+	add(_txtFiring);
+	add(_txtThrowing);
+	add(_txtMelee);
+	add(_txtStrength);
+	add(_txtPsiStrength);
+	add(_txtPsiSkill);
+	add(_lstSoldierStats);
+	add(_txtTooltip);
 
 	centerAllSurfaces();
 
@@ -121,6 +158,9 @@ DebriefingState::DebriefingState() : _region(0), _country(0), _noContainment(fal
 	_btnOk->onMouseClick((ActionHandler)&DebriefingState::btnOkClick);
 	_btnOk->onKeyboardPress((ActionHandler)&DebriefingState::btnOkClick, Options::keyOk);
 	_btnOk->onKeyboardPress((ActionHandler)&DebriefingState::btnOkClick, Options::keyCancel);
+
+	_btnStats->setColor(Palette::blockOffset(15)-1);
+	_btnStats->onMouseClick((ActionHandler)&DebriefingState::btnStatsClick);
 
 	_txtTitle->setColor(Palette::blockOffset(8)+5);
 	_txtTitle->setBig();
@@ -154,7 +194,115 @@ DebriefingState::DebriefingState() : _region(0), _country(0), _noContainment(fal
 	_lstTotal->setColumns(2, 254, 64);
 	_lstTotal->setDot(true);
 
+	// Second page
+	_txtSoldier->setColor(Palette::blockOffset(8)+5);
+	_txtSoldier->setText(tr("STR_NAME_UC"));
+
+	_txtTU->setAlign(ALIGN_CENTER);
+	_txtTU->setColor(Palette::blockOffset(8)+5);
+	_txtTU->setText(tr("STR_TIME_UNITS_ABBREVIATION"));
+	_txtTU->setTooltip("STR_TIME_UNITS");
+	_txtTU->onMouseIn((ActionHandler)&DebriefingState::txtTooltipIn);
+	_txtTU->onMouseOut((ActionHandler)&DebriefingState::txtTooltipOut);
+
+	_txtStamina->setAlign(ALIGN_CENTER);
+	_txtStamina->setColor(Palette::blockOffset(8)+5);
+	_txtStamina->setText(tr("STR_STAMINA_ABBREVIATION"));
+	_txtStamina->setTooltip("STR_STAMINA");
+	_txtStamina->onMouseIn((ActionHandler)&DebriefingState::txtTooltipIn);
+	_txtStamina->onMouseOut((ActionHandler)&DebriefingState::txtTooltipOut);
+
+	_txtHealth->setAlign(ALIGN_CENTER);
+	_txtHealth->setColor(Palette::blockOffset(8)+5);
+	_txtHealth->setText(tr("STR_HEALTH_ABBREVIATION"));
+	_txtHealth->setTooltip("STR_HEALTH");
+	_txtHealth->onMouseIn((ActionHandler)&DebriefingState::txtTooltipIn);
+	_txtHealth->onMouseOut((ActionHandler)&DebriefingState::txtTooltipOut);
+
+	_txtBravery->setAlign(ALIGN_CENTER);
+	_txtBravery->setColor(Palette::blockOffset(8)+5);
+	_txtBravery->setText(tr("STR_BRAVERY_ABBREVIATION"));
+	_txtBravery->setTooltip("STR_BRAVERY");
+	_txtBravery->onMouseIn((ActionHandler)&DebriefingState::txtTooltipIn);
+	_txtBravery->onMouseOut((ActionHandler)&DebriefingState::txtTooltipOut);
+
+	_txtReactions->setAlign(ALIGN_CENTER);
+	_txtReactions->setColor(Palette::blockOffset(8)+5);
+	_txtReactions->setText(tr("STR_REACTIONS_ABBREVIATION"));
+	_txtReactions->setTooltip("STR_REACTIONS");
+	_txtReactions->onMouseIn((ActionHandler)&DebriefingState::txtTooltipIn);
+	_txtReactions->onMouseOut((ActionHandler)&DebriefingState::txtTooltipOut);
+
+	_txtFiring->setAlign(ALIGN_CENTER);
+	_txtFiring->setColor(Palette::blockOffset(8)+5);
+	_txtFiring->setText(tr("STR_FIRING_ACCURACY_ABBREVIATION"));
+	_txtFiring->setTooltip("STR_FIRING_ACCURACY");
+	_txtFiring->onMouseIn((ActionHandler)&DebriefingState::txtTooltipIn);
+	_txtFiring->onMouseOut((ActionHandler)&DebriefingState::txtTooltipOut);
+
+	_txtThrowing->setAlign(ALIGN_CENTER);
+	_txtThrowing->setColor(Palette::blockOffset(8)+5);
+	_txtThrowing->setText(tr("STR_THROWING_ACCURACY_ABBREVIATION"));
+	_txtThrowing->setTooltip("STR_THROWING_ACCURACY");
+	_txtThrowing->onMouseIn((ActionHandler)&DebriefingState::txtTooltipIn);
+	_txtThrowing->onMouseOut((ActionHandler)&DebriefingState::txtTooltipOut);
+
+	_txtMelee->setAlign(ALIGN_CENTER);
+	_txtMelee->setColor(Palette::blockOffset(8)+5);
+	_txtMelee->setText(tr("STR_MELEE_ACCURACY_ABBREVIATION"));
+	_txtMelee->setTooltip("STR_MELEE_ACCURACY");
+	_txtMelee->onMouseIn((ActionHandler)&DebriefingState::txtTooltipIn);
+	_txtMelee->onMouseOut((ActionHandler)&DebriefingState::txtTooltipOut);
+
+	_txtStrength->setAlign(ALIGN_CENTER);
+	_txtStrength->setColor(Palette::blockOffset(8)+5);
+	_txtStrength->setText(tr("STR_STRENGTH_ABBREVIATION"));
+	_txtStrength->setTooltip("STR_STRENGTH");
+	_txtStrength->onMouseIn((ActionHandler)&DebriefingState::txtTooltipIn);
+	_txtStrength->onMouseOut((ActionHandler)&DebriefingState::txtTooltipOut);
+
+	_txtPsiStrength->setAlign(ALIGN_CENTER);
+	_txtPsiStrength->setColor(Palette::blockOffset(8)+5);
+	_txtPsiStrength->setText(tr("STR_PSIONIC_STRENGTH_ABBREVIATION"));
+	_txtPsiStrength->setTooltip("STR_PSIONIC_STRENGTH");
+	_txtPsiStrength->onMouseIn((ActionHandler)&DebriefingState::txtTooltipIn);
+	_txtPsiStrength->onMouseOut((ActionHandler)&DebriefingState::txtTooltipOut);
+
+	_txtPsiSkill->setAlign(ALIGN_CENTER);
+	_txtPsiSkill->setColor(Palette::blockOffset(8)+5);
+	_txtPsiSkill->setText(tr("STR_PSIONIC_SKILL_ABBREVIATION"));
+	_txtPsiSkill->setTooltip("STR_PSIONIC_SKILL");
+	_txtPsiSkill->onMouseIn((ActionHandler)&DebriefingState::txtTooltipIn);
+	_txtPsiSkill->onMouseOut((ActionHandler)&DebriefingState::txtTooltipOut);
+
+	_lstSoldierStats->setColor(Palette::blockOffset(15)-1);
+	_lstSoldierStats->setSecondaryColor(Palette::blockOffset(8)+10);
+	_lstSoldierStats->setColumns(13, 90, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 0);
+	_lstSoldierStats->setAlign(ALIGN_CENTER);
+	_lstSoldierStats->setAlign(ALIGN_LEFT, 0);
+	_lstSoldierStats->setDot(true);
+
+	_txtTooltip->setColor(Palette::blockOffset(8)+5);
+
 	prepareDebriefing();
+
+	for (std::vector<SoldierStatsEntry>::iterator i = _soldierStats.begin(); i != _soldierStats.end(); ++i)
+	{
+		_lstSoldierStats->addRow(13, (*i).first.c_str(),
+				makeSoldierString((*i).second.tu).c_str(),
+				makeSoldierString((*i).second.stamina).c_str(),
+				makeSoldierString((*i).second.health).c_str(),
+				makeSoldierString((*i).second.bravery).c_str(),
+				makeSoldierString((*i).second.reactions).c_str(),
+				makeSoldierString((*i).second.firing).c_str(),
+				makeSoldierString((*i).second.throwing).c_str(),
+				makeSoldierString((*i).second.melee).c_str(),
+				makeSoldierString((*i).second.strength).c_str(),
+				makeSoldierString((*i).second.psiStrength).c_str(),
+				makeSoldierString((*i).second.psiSkill).c_str(),
+				"");
+		// note: final dummy element to cause dot filling until the end of the line
+	}
 
 	int total = 0, statsY = 0, recoveryY = 0;
 	for (std::vector<DebriefingStat*>::iterator i = _stats.begin(); i != _stats.end(); ++i)
@@ -249,6 +397,79 @@ DebriefingState::~DebriefingState()
 		delete *i;
 	}
 	_rounds.clear();
+}
+
+std::wstring DebriefingState::makeSoldierString(int stat)
+{
+	if (stat == 0) return L"";
+
+	std::wostringstream ss;
+	ss << L'\x01' << L'+' << stat << L'\x01';
+	return ss.str();
+}
+
+void DebriefingState::applyVisibility()
+{
+	// First page (scores)
+	_txtItem->setVisible(!_showSoldierStats);
+	_txtQuantity->setVisible(!_showSoldierStats);
+	_txtScore->setVisible(!_showSoldierStats);
+	_txtRecovery->setVisible(!_showSoldierStats);
+	_txtRating->setVisible(!_showSoldierStats);
+	_lstStats->setVisible(!_showSoldierStats);
+	_lstRecovery->setVisible(!_showSoldierStats);
+	_lstTotal->setVisible(!_showSoldierStats);
+
+	// Second page (soldier stats)
+	_txtSoldier->setVisible(_showSoldierStats);
+	_txtTU->setVisible(_showSoldierStats);
+	_txtStamina->setVisible(_showSoldierStats);
+	_txtHealth->setVisible(_showSoldierStats);
+	_txtBravery->setVisible(_showSoldierStats);
+	_txtReactions->setVisible(_showSoldierStats);
+	_txtFiring->setVisible(_showSoldierStats);
+	_txtThrowing->setVisible(_showSoldierStats);
+	_txtMelee->setVisible(_showSoldierStats);
+	_txtStrength->setVisible(_showSoldierStats);
+	_txtPsiStrength->setVisible(_showSoldierStats);
+	_txtPsiSkill->setVisible(_showSoldierStats);
+	_lstSoldierStats->setVisible(_showSoldierStats);
+	_txtTooltip->setVisible(_showSoldierStats);
+
+	// Set text on toggle button accordingly
+	_btnStats->setText(_showSoldierStats ? tr("STR_SCORE") : tr("STR_STATS"));
+
+}
+
+/**
+* Shows a tooltip for the appropriate text.
+* @param action Pointer to an action.
+*/
+void DebriefingState::txtTooltipIn(Action *action)
+{
+	_currentTooltip = action->getSender()->getTooltip();
+	_txtTooltip->setText(tr(_currentTooltip));}
+
+/**
+* Clears the tooltip text.
+* @param action Pointer to an action.
+*/
+void DebriefingState::txtTooltipOut(Action *action)
+{
+	if (_currentTooltip == action->getSender()->getTooltip())
+	{
+		_txtTooltip->setText(L"");
+	}
+}
+
+/**
+ * Displays soldiers' stat increases.
+ * @param action Pointer to an action.
+ */
+void DebriefingState::btnStatsClick(Action *)
+{
+	_showSoldierStats = !_showSoldierStats;
+	applyVisibility();
 }
 
 /**
@@ -664,7 +885,10 @@ void DebriefingState::prepareDebriefing()
 			{
 				if (((*j)->isInExitArea() && (battle->getMissionType() != "STR_BASE_DEFENSE" || success)) || !aborted)
 				{ // so game is not aborted or aborted and unit is on exit area
-					(*j)->postMissionProcedures(save);
+					UnitStats statIncrease;
+					bool hasImproved = (*j)->postMissionProcedures(save, statIncrease);
+					if (hasImproved)
+						_soldierStats.push_back(std::pair<std::wstring, UnitStats>((*j)->getGeoscapeSoldier()->getName(), statIncrease));
 					playerInExitArea++;
 					if (soldier != 0)
 					{

@@ -288,8 +288,11 @@ void TextList::addRow(int cols, ...)
 			unsigned int w = txt->getTextWidth();
 			while (w < _columns[i])
 			{
-				w += _font->getChar('.')->getCrop()->w + _font->getSpacing();
-				buf += '.';
+				w += _font->getChar(L'.')->getCrop()->w + _font->getSpacing();
+				if (_align[i] == ALIGN_RIGHT)
+					buf.insert(0, 1, L'.');
+				else
+					buf += L'.';
 			}
 			txt->setText(buf);
 		}
@@ -527,7 +530,7 @@ void TextList::setAlign(TextHAlign align, int col)
 {
 	if (col == -1)
 	{
-		for (size_t i = 0; i <= _columns.size() - 1; ++i)
+		for (size_t i = 0; i < _columns.size(); ++i)
 		{
 			_align[i] = align;
 		}

@@ -1914,9 +1914,10 @@ void BattleUnit::updateGeoscapeStats(Soldier *soldier)
  * Check if unit eligible for squaddie promotion. If yes, promote the unit.
  * Increase the mission counter. Calculate the experience increases.
  * @param geoscape Pointer to geoscape save.
+ * @param statsDiff (out) The passed UnitStats struct will be filled with the stats differences.
  * @return True if the soldier was eligible for squaddie promotion.
  */
-bool BattleUnit::postMissionProcedures(SavedGame *geoscape)
+bool BattleUnit::postMissionProcedures(SavedGame *geoscape, UnitStats &statsDiff)
 {
 	Soldier *s = geoscape->getSoldier(_id);
 	if (s == 0)
@@ -1927,6 +1928,7 @@ bool BattleUnit::postMissionProcedures(SavedGame *geoscape)
 	updateGeoscapeStats(s);
 
 	UnitStats *stats = s->getCurrentStats();
+	statsDiff -= *stats;        // subtract old stats
 	const UnitStats caps = s->getRules()->getStatCaps();
 	int healthLoss = stats->health - _health;
 
@@ -1961,8 +1963,10 @@ bool BattleUnit::postMissionProcedures(SavedGame *geoscape)
 		stats->psiStrength += improveStat(_expPsiStrength);
 	}
 
+	bool hasImproved = false;
 	if (_expBravery || _expReactions || _expFiring || _expPsiSkill || _expPsiStrength || _expMelee)
 	{
+		hasImproved = true;
 		if (s->getRank() == RANK_ROOKIE)
 			s->promoteRank();
 		int v;
@@ -1974,12 +1978,11 @@ bool BattleUnit::postMissionProcedures(SavedGame *geoscape)
 		if (v > 0) stats->strength += RNG::generate(0, v/10 + 2);
 		v = caps.stamina - stats->stamina;
 		if (v > 0) stats->stamina += RNG::generate(0, v/10 + 2);
-		return true;
 	}
-	else
-	{
-		return false;
-	}
+
+	statsDiff += *stats; // add new stats
+
+	return hasImproved;
 }
 
 /**

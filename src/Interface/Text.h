@@ -19,7 +19,7 @@
 #ifndef OPENXCOM_TEXT_H
 #define OPENXCOM_TEXT_H
 
-#include "../Engine/Surface.h"
+#include "../Engine/InteractiveSurface.h"
 #include <vector>
 #include <string>
 #include <stdint.h>
@@ -39,7 +39,7 @@ enum TextVAlign { ALIGN_TOP, ALIGN_MIDDLE, ALIGN_BOTTOM };
  * to display a string of text, taking care of any required aligning
  * or wrapping.
  */
-class Text : public Surface
+class Text : public InteractiveSurface
 {
 private:
 	Font *_big, *_small, *_font;
@@ -103,7 +103,7 @@ public:
 	/// Gets the rendered text's height.
 	int getTextHeight(int line = -1) const;
 	/// Draws the text.
-	void draw();
+	virtual void draw();
 };
 
 }
