@@ -1929,7 +1929,7 @@ bool BattleUnit::postMissionProcedures(SavedGame *geoscape, UnitStats &statsDiff
 
 	UnitStats *stats = s->getCurrentStats();
 	statsDiff -= *stats;        // subtract old stats
-	const UnitStats caps = s->getRules()->getStatCaps();
+	const UnitStats &caps = s->getRules()->getStatCaps();
 	int healthLoss = stats->health - _health;
 
 	s->setWoundRecovery(RNG::generate((healthLoss*0.5),(healthLoss*1.5)));

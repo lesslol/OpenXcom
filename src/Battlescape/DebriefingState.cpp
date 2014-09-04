@@ -112,7 +112,7 @@ DebriefingState::DebriefingState() : _region(0), _country(0), _noContainment(fal
 	_txtPsiStrength = new Text(18, textSmallH, 268, 24); //268
 	_txtPsiSkill	= new Text(18, textSmallH, 286, 24); //286..304 = 18
 	_lstSoldierStats = new TextList(290, tr(136,"DebriefingSoldiersH"), 16, tr(32,"DebriefingStatsY"));
-	_txtTooltip		= new Text(200, textSmallH, 64, tr(180,"DebriefingRatingY"));
+	_txtTooltip	    = new Text(200, textSmallH, 64, tr(180,"DebriefingRatingY"));
 
 	applyVisibility();
 

@@ -59,7 +59,7 @@ void RuleSoldier::load(const YAML::Node &node)
  * this unit. Each unit type has a unique name.
  * @return Unit name.
  */
-std::string RuleSoldier::getType() const
+const std::string &RuleSoldier::getType() const
 {
 	return _type;
 }
@@ -68,7 +68,7 @@ std::string RuleSoldier::getType() const
  * Gets the minimum stats for the random stats generator.
  * @return The minimum stats.
  */
-UnitStats RuleSoldier::getMinStats() const
+const UnitStats &RuleSoldier::getMinStats() const
 {
 	return _minStats;
 }
@@ -77,7 +77,7 @@ UnitStats RuleSoldier::getMinStats() const
  * Gets the maximum stats for the random stats generator.
  * @return The maximum stats.
  */
-UnitStats RuleSoldier::getMaxStats() const
+const UnitStats &RuleSoldier::getMaxStats() const
 {
 	return _maxStats;
 }
@@ -86,7 +86,7 @@ UnitStats RuleSoldier::getMaxStats() const
  * Gets the stat caps.
  * @return The stat caps.
  */
-UnitStats RuleSoldier::getStatCaps() const
+const UnitStats &RuleSoldier::getStatCaps() const
 {
 	return _statCaps;
 }
@@ -122,7 +122,7 @@ int RuleSoldier::getFloatHeight() const
  * Gets the armor name.
  * @return The armor name.
  */
-std::string RuleSoldier::getArmor() const
+const std::string &RuleSoldier::getArmor() const
 {
 	return _armor;
 }

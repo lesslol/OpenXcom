@@ -86,7 +86,7 @@ InventoryState::InventoryState(bool tu, BattlescapeState *parent) : _tu(tu), _pa
 	_txtName = new Text(210, 17, 28, 6);
 
 	_txtTus = new Text(tr(40,"InvenShortW"), tr(9,"TextSmallH"), tr(245,"InvenTusX"), tr(24,"InvenTusY"));
-	_txtWeight = new Text(tr(40,"InvenShortW"), tr(9,"TextSmallH"), tr(245,"InvenWeightX"), tr(24,"InvenWeightY"));
+	_txtWeight = new Text(tr(70,"InvenShortW"), tr(9,"TextSmallH"), tr(245,"InvenWeightX"), tr(24,"InvenWeightY"));
 	_txtFAcc = new Text(tr(40,"InvenShortW"), tr(9,"TextSmallH"), tr(245,"InvenFAccX"), tr(32,"InvenFAccY"));
 	_txtReact = new Text(tr(40,"InvenShortW"), tr(9,"TextSmallH"), tr(245,"InvenReactX"), tr(40,"InvenReactY"));
 	_txtPSkill = new Text(tr(40,"InvenShortW"), tr(9,"TextSmallH"), tr(245,"InvenPSkillX"), tr(48,"InvenPSkillY"));
