@@ -728,6 +728,27 @@ void BattlescapeGenerator::deployAliens(AlienRace *race, AlienDeployment *deploy
 			int itemLevel = _game->getRuleset()->getAlienItemLevels().at(month).at(RNG::generate(0,9));
 			if (unit)
 			{
+				// Built in weapons: the unit has this weapon regardless of loadout or what have you.
+				if (!rule->getBuiltInWeapons().empty())
+				{
+					for (std::vector<std::string>::const_iterator j = rule->getBuiltInWeapons().begin(); j != rule->getBuiltInWeapons().end(); ++j)
+					{
+						RuleItem *ruleItem = _game->getRuleset()->getItem(*j);
+						if (ruleItem)
+						{
+							BattleItem *item = new BattleItem(ruleItem, _save->getCurrentItemId());
+							if (!addItem(item, unit))
+							{
+								delete item;
+							}
+							else
+							{
+								unit->setTurretType(item->getRules()->getTurretType());
+							}
+						}
+					}
+				}
+
 				// terrorist alien's equipment is a special case - they are fitted with a weapon which is the alien's name with suffix _WEAPON
 				if (rule->isLivingWeapon())
 				{
@@ -940,9 +961,11 @@ bool BattlescapeGenerator::placeItemByLayout(BattleItem *item)
 bool BattlescapeGenerator::addItem(BattleItem *item, BattleUnit *unit, bool allowSecondClip)
 {
 	RuleInventory *rightHand = _game->getRuleset()->getInventory("STR_RIGHT_HAND");
+	RuleInventory *leftHand = _game->getRuleset()->getInventory("STR_LEFT_HAND");
 	bool placed = false;
 	bool loaded = false;
-	BattleItem *weapon = unit->getItem("STR_RIGHT_HAND");
+	BattleItem *rightWeapon = unit->getItem("STR_RIGHT_HAND");
+	BattleItem *leftWeapon = unit->getItem("STR_LEFT_HAND");
 	int weight = 0;
 
 	// tanks and aliens don't care about weight or multiple items,
@@ -992,31 +1015,42 @@ bool BattlescapeGenerator::addItem(BattleItem *item, BattleUnit *unit, bool allo
 
 		if (loaded && (unit->getGeoscapeSoldier() == 0 || _allowAutoLoadout))
 		{
-			if (!unit->getItem("STR_RIGHT_HAND") && unit->getStats()->strength * 0.66 >= weight) // weight is always considered 0 for aliens
+			if (!rightWeapon && unit->getStats()->strength * 0.66 >= weight) // weight is always considered 0 for aliens
 			{
 				item->moveToOwner(unit);
 				item->setSlot(rightHand);
 				placed = true;
 			}
+			if (!placed && !leftWeapon && (unit->getFaction() != FACTION_PLAYER || item->getRules()->isFixed()))
+			{
+				item->moveToOwner(unit);
+				item->setSlot(leftHand);
+				placed = true;
+			}
 		}
 		break;
 	case BT_AMMO:
-		// no weapon, or our weapon takes no ammo, or this ammo isn't compatible.
+		// no weapon, or our weapon takes no ammo.
 		// we won't be needing this. move on.
-		if (!weapon || weapon->getRules()->getCompatibleAmmo()->empty() ||
-			std::find(weapon->getRules()->getCompatibleAmmo()->begin(),
-			weapon->getRules()->getCompatibleAmmo()->end(),
-			item->getRules()->getType()) == weapon->getRules()->getCompatibleAmmo()->end())
+		if (!rightWeapon || rightWeapon->getRules()->getCompatibleAmmo()->empty())
 		{
 			break;
 		}
 		// xcom weapons will already be loaded, aliens and tanks, however, get their ammo added afterwards.
 		// so let's try to load them here.
-		if ((weapon->getRules()->isFixed() || unit->getFaction() != FACTION_PLAYER) &&
-			!weapon->getAmmoItem() &&
-			weapon->setAmmoItem(item) == 0)
+		if ((rightWeapon->getRules()->isFixed() || unit->getFaction() != FACTION_PLAYER) &&
+			!rightWeapon->getAmmoItem() &&
+			rightWeapon->setAmmoItem(item) == 0)
 		{
 			item->setSlot(rightHand);
+			placed = true;
+			break;
+		}
+		if (leftWeapon && (leftWeapon->getRules()->isFixed() || unit->getFaction() != FACTION_PLAYER) &&
+			!leftWeapon->getAmmoItem() &&
+			leftWeapon->setAmmoItem(item))
+		{
+			item->setSlot(leftHand);
 			placed = true;
 			break;
 		}
@@ -1736,7 +1770,6 @@ int BattlescapeGenerator::loadMAP(MapBlock *mapblock, int xoff, int yoff, RuleTe
  */
 void BattlescapeGenerator::loadRMP(MapBlock *mapblock, int xoff, int yoff, int segment)
 {
-	int id = 0;
 	char value[24];
 	std::ostringstream filename;
 	filename << "ROUTES/" << mapblock->getName() << ".RMP";
@@ -1752,21 +1785,35 @@ void BattlescapeGenerator::loadRMP(MapBlock *mapblock, int xoff, int yoff, int s
 
 	while (mapFile.read((char*)&value, sizeof(value)))
 	{
-		if( (int)value[0] < mapblock->getSizeY() && (int)value[1] < mapblock->getSizeX() && (int)value[2] < _mapsize_z )
+		int pos_x = value[1];
+		int pos_y = value[0];
+		int pos_z = value[2];
+		if (pos_x < mapblock->getSizeX() && pos_y < mapblock->getSizeY() && pos_z < _mapsize_z )
 		{
-			Node *node = new Node(nodeOffset + id, Position(xoff + (int)value[1], yoff + (int)value[0], mapblock->getSizeZ() - 1 - (int)value[2]), segment, (int)value[19], (int)value[20], (int)value[21], (int)value[22], (int)value[23]);
-			for (int j=0;j<5;++j)
+			Position pos = Position(xoff + pos_x, yoff + pos_y, mapblock->getSizeZ() - 1 - pos_z);
+			int type     = value[19];
+			int rank     = value[20];
+			int flags    = value[21];
+			int reserved = value[22];
+			int priority = value[23];
+			Node *node = new Node(_save->getNodes()->size(), pos, segment, type, rank, flags, reserved, priority);
+			for (int j = 0; j < 5; ++j)
 			{
-				int connectID = (int)((signed char)value[4 + j*3]);
-				if (connectID > -1)
+				int connectID = (int)((unsigned char)value[4 + j * 3]);
+				// don't touch special values
+				if (connectID <= 250)
 				{
 					connectID += nodeOffset;
+				}
+				// 255/-1 = unused, 254/-2 = north, 253/-3 = east, 252/-4 = south, 251/-5 = west
+				else
+				{
+					connectID -= 256;
 				}
 				node->getNodeLinks()->push_back(connectID);
 			}
 			_save->getNodes()->push_back(node);
 		}
-		id++;
 	}
 
 	if (!mapFile.eof())
