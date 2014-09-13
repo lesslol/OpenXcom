@@ -220,23 +220,23 @@ public:
 	/// Gets an MCDPatch.
 	MCDPatch *getMCDPatch(const std::string name) const;
 	/// Gets the list of external Sprites.
-	std::vector<std::pair<std::string, ExtraSprites *> > getExtraSprites() const;
+	const std::vector<std::pair<std::string, ExtraSprites *> > &getExtraSprites() const;
 	/// Gets the list of external Sounds.
-	std::vector<std::pair<std::string, ExtraSounds *> > getExtraSounds() const;
+	const std::vector<std::pair<std::string, ExtraSounds *> > &getExtraSounds() const;
 	/// Gets the list of external Strings.
-	std::map<std::string, ExtraStrings *> getExtraStrings() const;
+	const std::map<std::string, ExtraStrings *> &getExtraStrings() const;
 	/// Gets the list of StatStrings.
-    std::vector<StatString *> getStatStrings() const;    
+    const std::vector<StatString *> &getStatStrings() const;    
 	/// Sorts all our lists according to their weight.
 	void sortLists();
 	/// Gets the research-requirements for Psi-Lab (it's a cache for psiStrengthEval)
-	std::vector<std::string> getPsiRequirements() const;
+	const std::vector<std::string> &getPsiRequirements() const;
 	/// Returns the sorted list of inventories.
 	const std::vector<std::string> &getInvsList () const;
 	/// Generates a new soldier.
 	Soldier *genSoldier(SavedGame *save) const;
 	/// Gets the item to be used as fuel for ships.
-	const std::string getAlienFuel() const;
+	const std::string &getAlienFuel() const;
 	/// Gets the minimum radar's range.
 	int getMinRadarRange() const;
 	/// Gets information on an interface element.

@@ -1243,7 +1243,7 @@ MCDPatch *Ruleset::getMCDPatch(const std::string id) const
  * Gets the list of external sprites.
  * @return The list of external sprites.
  */
-std::vector<std::pair<std::string, ExtraSprites *> > Ruleset::getExtraSprites() const
+const std::vector<std::pair<std::string, ExtraSprites *> > &Ruleset::getExtraSprites() const
 {
 	return _extraSprites;
 }
@@ -1252,7 +1252,7 @@ std::vector<std::pair<std::string, ExtraSprites *> > Ruleset::getExtraSprites() 
  * Gets the list of external sounds.
  * @return The list of external sounds.
  */
-std::vector<std::pair<std::string, ExtraSounds *> > Ruleset::getExtraSounds() const
+const std::vector<std::pair<std::string, ExtraSounds *> > &Ruleset::getExtraSounds() const
 {
 	return _extraSounds;
 }
@@ -1260,7 +1260,7 @@ std::vector<std::pair<std::string, ExtraSounds *> > Ruleset::getExtraSounds() co
  * Gets the list of external strings.
  * @return The list of external strings.
  */
-std::map<std::string, ExtraStrings *> Ruleset::getExtraStrings() const
+const std::map<std::string, ExtraStrings *> &Ruleset::getExtraStrings() const
 {
 	return _extraStrings;
 }
@@ -1269,7 +1269,7 @@ std::map<std::string, ExtraStrings *> Ruleset::getExtraStrings() const
  * Gets the list of StatStrings.
  * @return The list of StatStrings.
  */
-std::vector<StatString *> Ruleset::getStatStrings() const
+const std::vector<StatString *> &Ruleset::getStatStrings() const
 {
 	return _statStrings;
 }
@@ -1401,7 +1401,7 @@ void Ruleset::sortLists()
 /**
  * Gets the research-requirements for Psi-Lab (it's a cache for psiStrengthEval)
  */
-std::vector<std::string> Ruleset::getPsiRequirements() const
+const std::vector<std::string> &Ruleset::getPsiRequirements() const
 {
 	return _psiRequirements;
 }
@@ -1453,7 +1453,7 @@ Soldier *Ruleset::genSoldier(SavedGame *save) const
  * Gets the name of the item to be used as alien fuel.
  * @return the name of the fuel.
  */
-const std::string Ruleset::getAlienFuel() const
+const std::string &Ruleset::getAlienFuel() const
 {
 	return _alienFuel;
 }
