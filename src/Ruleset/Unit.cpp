@@ -219,7 +219,7 @@ int Unit::getSpecialAbility() const
  * Gets the unit that is spawned when this one dies.
  * @return The unit's spawn unit.
  */
-std::string Unit::getSpawnUnit() const
+const std::string &Unit::getSpawnUnit() const
 {
 	return _spawnUnit;
 }
@@ -257,7 +257,7 @@ const bool Unit::isLivingWeapon() const
  * What is this unit's built in melee weapon (if any).
  * @return the name of the weapon.
  */
-const std::string Unit::getMeleeWeapon() const
+const std::string &Unit::getMeleeWeapon() const
 {
 	return _meleeWeapon;
 }

@@ -562,7 +562,7 @@ void Ufo::setShotDownByCraftId(const CraftId& craft)
 	_shotDownByCraftId = craft;
 }
 
-CraftId Ufo::getShotDownByCraftId() const
+const CraftId &Ufo::getShotDownByCraftId() const
 {
 	return _shotDownByCraftId;
 }

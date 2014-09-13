@@ -370,7 +370,7 @@ public:
 	/// Set health to 0 and set status dead
 	void instaKill();
 	/// Gets the unit's spawn unit.
-	std::string getSpawnUnit() const;
+	const std::string &getSpawnUnit() const;
 	/// Sets the unit's spawn unit.
 	void setSpawnUnit(std::string spawnUnit);
 	/// Gets the unit's aggro sound.

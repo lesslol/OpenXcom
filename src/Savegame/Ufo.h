@@ -116,7 +116,7 @@ public:
 	/// Sets the ID of craft which shot down the UFO.
 	void setShotDownByCraftId(const CraftId& craftId);
 	/// Gets the ID of craft which shot down the UFO.
-	CraftId getShotDownByCraftId() const;
+	const CraftId &getShotDownByCraftId() const;
 	/// Gets the UFO's visibility.
 	int getVisibility() const;
 	/// Gets the UFO's Mission type.

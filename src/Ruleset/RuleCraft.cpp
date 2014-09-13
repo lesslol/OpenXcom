@@ -105,7 +105,7 @@ void RuleCraft::load(const YAML::Node &node, Ruleset *ruleset, int modIndex, int
  * this craft. Each craft type has a unique name.
  * @return The craft's name.
  */
-std::string RuleCraft::getType() const
+const std::string &RuleCraft::getType() const
 {
 	return _type;
 }
@@ -233,7 +233,7 @@ int RuleCraft::getSellCost() const
  * the craft is refuelling.
  * @return The item ID or "" if none.
  */
-std::string RuleCraft::getRefuelItem() const
+const std::string &RuleCraft::getRefuelItem() const
 {
 	return _refuelItem;
 }

@@ -56,7 +56,7 @@ public:
 	/// Loads craft data from YAML.
 	void load(const YAML::Node& node, Ruleset *ruleset, int modIndex, int nextCraftIndex);
 	/// Gets the craft's type.
-	std::string getType() const;
+	const std::string &getType() const;
 	/// Gets the craft's requirements.
 	const std::vector<std::string> &getRequirements () const;
 	/// Gets the craft's sprite.
@@ -82,7 +82,7 @@ public:
 	/// Gets the craft's value.
 	int getSellCost() const;
 	/// Gets the craft's refuel item.
-	std::string getRefuelItem() const;
+	const std::string &getRefuelItem() const;
 	/// Gets the craft's repair rate.
 	int getRepairRate() const;
 	/// Gets the craft's refuel rate.

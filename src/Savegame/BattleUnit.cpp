@@ -2300,7 +2300,7 @@ void BattleUnit::setSpecialAbility(SpecialAbility specab)
  * Get the unit that is spawned when this one dies.
  * @return unit.
  */
-std::string BattleUnit::getSpawnUnit() const
+const std::string &BattleUnit::getSpawnUnit() const
 {
 	return _spawnUnit;
 }
