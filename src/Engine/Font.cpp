@@ -238,7 +238,7 @@ SDL_Rect Font::getCharSize(wchar_t c)
 		else if (isNonBreakableSpace(c))
 			size.w = _width / 4;
 		else
-			size.w = (unsigned)(_width / 3.0f + 0.49999997); /* round(w/3) */
+			size.w = (unsigned)(_width / 3.0f + 0.49999997f); /* round(w/3) */
 		size.h = _height + _spacing;
 	}
 	// In case anyone mixes them up

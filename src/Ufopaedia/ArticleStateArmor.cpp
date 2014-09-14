@@ -61,7 +61,7 @@ namespace OpenXcom
 		_txtTitle->setBig();
 		_txtTitle->setText(tr(defs->title));
 
-		_image = new Surface(320, 200, 0, 0);
+		_image = new Surface(320, 200, 0, tr(0,"ArticleArmorImageY"));
 		add(_image);
 
 		std::string look = armor->getSpriteInventory();
@@ -73,14 +73,14 @@ namespace OpenXcom
 		_game->getResourcePack()->getSurface(look)->blit(_image);
 
 
-		_lstInfo = new TextList(150, tr(96,"ArticleArmorListH"), 150, 46);
+		_lstInfo = new TextList(150, tr(96,"ArticleArmorListH"), 150, tr(46,"ArticleArmorListY"));
 		add(_lstInfo);
 
 		_lstInfo->setColor(Palette::blockOffset(14)+15);
 		_lstInfo->setColumns(2, 125, 25);
 		_lstInfo->setDot(true);
 
-		_txtInfo = new Text(300, 56, 8, 150);
+		_txtInfo = new Text(300, tr(56,"ArticleArmorInfoH"), 8, tr(150,"ArticleArmorInfoY"));
 		add(_txtInfo);
 
 		_txtInfo->setColor(Palette::blockOffset(14)+15);

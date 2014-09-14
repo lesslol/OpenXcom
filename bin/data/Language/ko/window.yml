@@ -43,7 +43,7 @@ OptionsModsListH: 130 # 136
 OptionsTooltipY: 144 # 148
 OptionsTooltipH: 30 # 25
 
-# Pause 52
+# Pause
 PauseSaveY: 76 #74
 PauseAbandonY: 100 #96
 PauseOptionsY: 124 #122
@@ -304,12 +304,29 @@ ManageAlienContainmentLivesW: 84 #54
 # UfopaediaSelect
 UfopaediaSelectListH: 110 #104
 
+# ArticleArmor
+ArticleArmorImageY: -4 #0
+ArticleArmorListY: 43 #46
+ArticleArmorListH: 100 #96
+ArticleArmorInfoY: 146 #150
+ArticleArmorInfoH: 60 #56
+
 # ArticleBaseFacility
 ArticleBaseFacilityListY: 40 #42
 ArticleBaseFacilityListH: 50 #42
 
-# ArticleArmor
-ArticleArmorListH: 100 #96
+# ArticleCraftWeapon
+ArticleCraftWeaponListY: 78 #80
+ArticleCraftWeaponInfoY: 150 #160
+ArticleCraftWeaponInfoH: 40 #32
+
+# ArticleItem
+ArticleItemInfoY: 133 #138
+ArticleItemInfoH: 60 #56
+
+# ArticleUfo
+ArticleUfoInfoY: 134 #140
+ArticleUfoInfoH: 60 #50
 
 # ArticleVehicle
 ArticleVehicleListX: 7 #10

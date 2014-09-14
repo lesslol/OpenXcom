@@ -364,7 +364,7 @@ void Ufo::setSecondsRemaining(size_t seconds)
  * Returns the current direction the UFO is heading in.
  * @return Direction.
  */
-std::string Ufo::getDirection() const
+const std::string &Ufo::getDirection() const
 {
 	return _direction;
 }
@@ -373,7 +373,7 @@ std::string Ufo::getDirection() const
  * Returns the current altitude of the UFO.
  * @return Altitude.
  */
-std::string Ufo::getAltitude() const
+const std::string &Ufo::getAltitude() const
 {
 	return _altitude;
 }

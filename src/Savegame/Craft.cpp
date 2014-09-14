@@ -361,7 +361,7 @@ void Craft::setBase(Base *base, bool move)
  * Returns the current status of the craft.
  * @return Status string.
  */
-std::string Craft::getStatus() const
+const std::string &Craft::getStatus() const
 {
 	return _status;
 }

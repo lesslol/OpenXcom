@@ -146,7 +146,7 @@ namespace OpenXcom
 			}
 
 			// text_info is BELOW the info table
-			_txtInfo = new Text((ammo_data->size()<3 ? 300 : 180), 56, 8, 138);
+			_txtInfo = new Text((ammo_data->size()<3 ? 300 : 180), tr(56,"ArticleItemInfoH"), 8, tr(138,"ArticleItemInfoY"));
 		}
 		else
 		{

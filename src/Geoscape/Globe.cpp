@@ -211,7 +211,7 @@ struct CreateShadow
 			else
 			{
 				//this pixel is land
-				if (dest==0) return val;
+				if (dest==0) return (Uint8)val;
 				const int s = val / 3;
 				const int e = dest+s;
 				if(e > d + helper::ColorShade)
@@ -923,7 +923,7 @@ void Globe::draw()
 void Globe::drawOcean()
 {
 	lock();
-	drawCircle(_cenX+1, _cenY, _radius+20, oceanColor1);
+	drawCircle(_cenX+1, _cenY, (Sint16)_radius+20, oceanColor1);
 //	ShaderDraw<Ocean>(ShaderSurface(this));
 	unlock();
 }
@@ -1082,7 +1082,7 @@ void Globe::XuLine(Surface* surface, Surface* src, double x1, double y1, double 
 					tcol = d + helper::ColorShade;
 				else tcol = e;
 			}
-			surface->setPixel((int)x0,(int)y0,tcol);
+			surface->setPixel((int)x0,(int)y0,(Uint8)tcol);
 		}
 		x0+=SX;
 		y0+=SY;
@@ -1226,12 +1226,12 @@ void Globe::drawVHLine(Surface *surface, double lon1, double lat1, double lon2, 
 
 	if (fabs(sx)<0.01)
 	{
-		seg = abs( sy/(2*M_PI)*48 );
+		seg = (int) abs( sy/(2*M_PI)*48 );
 		if (seg == 0) ++seg;
 	}
 	else
 	{
-		seg = abs( sx/(2*M_PI)*96 );
+		seg = (int) abs( sx/(2*M_PI)*96 );
 		if (seg == 0) ++seg;
 	}
 
@@ -1467,7 +1467,7 @@ void Globe::drawPath(Surface *surface, double lon1, double lat1, double lon2, do
 	//longer path have more parts
 	length = b.norm();
 	length *= length*15;
-	count = length + 1;
+	count = (Sint16)length + 1;
 	b /= count;
 	p1 = CordPolar(a);
 	polarToCart(p1.lon, p1.lat, &x1, &y1);

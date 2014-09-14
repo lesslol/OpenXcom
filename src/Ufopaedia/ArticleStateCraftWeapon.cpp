@@ -62,16 +62,15 @@ namespace OpenXcom
 		_txtTitle->setWordWrap(true);
 		_txtTitle->setText(tr(defs->title));
 
-		_txtInfo = new Text(310, 32, 5, 160);
+		_txtInfo = new Text(310, tr(32,"ArticleCraftWeaponInfoH"), 5, tr(160,"ArticleCraftWeaponInfoY"));
 		add(_txtInfo);
 
 		_txtInfo->setColor(Palette::blockOffset(14)+15);
 		_txtInfo->setWordWrap(true);
 		_txtInfo->setText(tr(defs->text));
 
-		_lstInfo = new TextList(250, 111, 5, 80);
+		_lstInfo = new TextList(250, 111, 5, tr(80,"ArticleCraftWeaponListY"));
 		add(_lstInfo);
-
 
 		_lstInfo->setColor(Palette::blockOffset(14)+15);
 		_lstInfo->setColumns(2, 180, 70);

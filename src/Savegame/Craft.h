@@ -84,7 +84,7 @@ public:
 	/// Sets the craft's base.
 	void setBase(Base *base, bool move = true);
 	/// Gets the craft's status.
-	std::string getStatus() const;
+	const std::string &getStatus() const;
 	/// Sets the craft's status.
 	void setStatus(const std::string &status);
 	/// Gets the craft's altitude.

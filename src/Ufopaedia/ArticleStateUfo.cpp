@@ -95,7 +95,7 @@ namespace OpenXcom
 		}
 		graphic->blit(_image);
 
-		_txtInfo = new Text(300, 50, 10, 140);
+		_txtInfo = new Text(300, tr(50,"ArticleUfoInfoH"), 10, tr(140,"ArticleUfoInfoY"));
 		add(_txtInfo);
 
 		_txtInfo->setColor(Palette::blockOffset(8)+5);
