@@ -1046,7 +1046,7 @@ void GeoscapeState::time10Minutes()
 					{
 						if ((*j)->getDistance(*b) <= range)
 						{
-							if (RNG::percent(50-(int)(((*j)->getDistance(*b) / range) * 50)) && !(*b)->isDiscovered())
+							if (RNG::percent(50-((*j)->getDistance(*b) / range) * 50) && !(*b)->isDiscovered())
 							{
 								(*b)->setDiscovered(true);
 							}

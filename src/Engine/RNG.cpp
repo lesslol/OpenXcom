@@ -125,17 +125,6 @@ double boxMuller(double m, double s)
 }
 
 /**
- * Generates a random percent chance of an event occuring,
- * and returns the result
- * @param value Value percentage (0-100%)
- * @return True if the chance succeeded.
- */
-bool percent(int value)
-{
-	return (generate(0, 99) < value);
-}
-
-/**
  * Generates a random positive integer up to a number.
  * @param max Maximum number, exclusive.
  * @return Generated number.

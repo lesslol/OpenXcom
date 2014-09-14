@@ -43,8 +43,6 @@ namespace RNG
 	double generate(double min, double max);
 	/// Get normally distributed value.
 	double boxMuller(double m = 0, double s = 1);
-	/// Generates a percentage chance.
-	bool percent(int value);
 	/// Generates a random integer number, exclusive.
 	int generateEx(int max);
 	/// Shuffles a list randomly.
@@ -57,6 +55,22 @@ namespace RNG
 	{
 		std::random_shuffle(list.begin(), list.end(), generateEx);
 	}
+	/// Generates a percentage chance.
+	/**
+	* Generates a random percent chance of an event occuring,
+	* and returns the result
+	* @param value Value percentage (0-100%)
+	* @return True if the chance succeeded.
+	*/
+	template <typename T>
+	inline bool percent(T value)
+	{
+		return (generate(0, 99) < static_cast<int>(value));
+	}
+	/// Generates a percentage chance. (float specialized)
+	template <> inline bool percent<float>(float value)   { return (generate(0.0, 99.9) < value); }
+	/// Generates a percentage chance. (double specialized)
+	template <> inline bool percent<double>(double value) { return (generate(0.0, 99.9) < value); }
 }
 
 }
