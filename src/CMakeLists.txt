@@ -434,6 +434,8 @@ set ( menu_src
   Menu/LoadGameState.h
   Menu/SaveGameState.cpp
   Menu/SaveGameState.h
+  Menu/CreditsState.cpp
+  Menu/CreditsState.h
 )
 
 set ( resource_src

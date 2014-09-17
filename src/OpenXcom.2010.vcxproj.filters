@@ -143,6 +143,9 @@
     <ClCompile Include="Menu\NewGameState.cpp">
       <Filter>Menu</Filter>
     </ClCompile>
+    <ClCompile Include="Menu\CreditsState.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
     <ClCompile Include="Resource\XcomResourcePack.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
@@ -1019,6 +1022,9 @@
       <Filter>Menu</Filter>
     </ClInclude>
     <ClInclude Include="Menu\MainMenuState.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu\CreditsState.h">
       <Filter>Menu</Filter>
     </ClInclude>
     <ClInclude Include="Resource\XcomResourcePack.h">

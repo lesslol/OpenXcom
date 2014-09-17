@@ -455,6 +455,8 @@ openxcom_SOURCES = \
 	src/Menu/StartState.h \
 	src/Menu/TestState.cpp \
 	src/Menu/TestState.h \
+	src/Menu/CreditsState.cpp \
+	src/Menu/CreditsState.h \
 	src/pch.cpp \
 	src/pch.h \
 	src/resource.h \

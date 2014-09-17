@@ -34,6 +34,7 @@
 #include "NewBattleState.h"
 #include "ListLoadState.h"
 #include "OptionsVideoState.h"
+#include "CreditsState.h"
 
 namespace OpenXcom
 {
@@ -52,6 +53,7 @@ MainMenuState::MainMenuState()
 	_btnOptions = new TextButton(92, 20, 164, 118);
 	_btnQuit = new TextButton(192, 20, 64, 146);
 	_txtTitle = new Text(256, 30, 32, 45);
+	_btnCredits = new TextButton(46, 14, 164+92/2, 45+16+12);
 
 	// Set palette
 	setPalette("PAL_GEOSCAPE", 0);
@@ -63,6 +65,7 @@ MainMenuState::MainMenuState()
 	add(_btnOptions);
 	add(_btnQuit);
 	add(_txtTitle);
+	add(_btnCredits);
 
 	centerAllSurfaces();
 
@@ -90,6 +93,10 @@ MainMenuState::MainMenuState()
 	_btnQuit->setText(tr("STR_QUIT"));
 	_btnQuit->onMouseClick((ActionHandler)&MainMenuState::btnQuitClick);
 
+	_btnCredits->setColor(Palette::blockOffset(8)+10);
+	_btnCredits->setText(tr("STR_CREDITS"));
+	_btnCredits->onMouseClick((ActionHandler)&MainMenuState::btnCreditsClick);
+
 	_txtTitle->setColor(Palette::blockOffset(8)+10);
 	_txtTitle->setAlign(ALIGN_CENTER);
 	_txtTitle->setBig();
@@ -103,6 +110,8 @@ MainMenuState::MainMenuState()
 
 	_game->getCursor()->setColor(Palette::blockOffset(15)+12);
 	_game->getFpsCounter()->setColor(Palette::blockOffset(15)+12);
+
+	_btnCredits->setVisible(_game->getLanguage()->getId() == "ko");
 }
 
 /**
@@ -157,6 +166,12 @@ void MainMenuState::btnOptionsClick(Action *)
 void MainMenuState::btnQuitClick(Action *)
 {
 	_game->quit();
+}
+
+/// Handler for clicking the Credits button.
+void MainMenuState::btnCreditsClick(Action *action)
+{
+	_game->pushState(new CreditsState);
 }
 
 /**
