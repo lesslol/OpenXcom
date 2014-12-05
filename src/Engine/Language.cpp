@@ -48,7 +48,7 @@ static std::map<std::string, int> _localizedWindows;
 /**
  * Initializes an empty language file.
  */
-Language::Language() : _id(""), _strings(), _handler(0), _direction(DIRECTION_LTR), _wrap(WRAP_WORDS)
+Language::Language() : _handler(0), _direction(DIRECTION_LTR), _wrap(WRAP_WORDS)
 {
 	// maps don't have initializers :(
 	if (_names.empty())

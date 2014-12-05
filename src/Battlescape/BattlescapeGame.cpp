@@ -219,7 +219,7 @@ void BattlescapeGame::handleAI(BattleUnit *unit)
 		ai = unit->getCurrentAIState();
 	}
 	_AIActionCounter++;
-	if(_AIActionCounter == 1)
+	if (_AIActionCounter == 1)
 	{
 		_playedAggroSound = false;
 		unit->_hidingForTurn = false;
@@ -1100,11 +1100,28 @@ bool BattlescapeGame::handlePanickingUnit(BattleUnit *unit)
 				dropItem(unit->getPosition(), item, false, true);
 			}
 			unit->setCache(0);
-			ba.target = Position(unit->getPosition().x + RNG::generate(-5,5), unit->getPosition().y + RNG::generate(-5,5), unit->getPosition().z);
-			if (_save->getTile(ba.target)) // only walk towards it when the place exists
+			// let's try a few times to get a tile to run to.
+			for (int i= 0; i < 20; i++)
 			{
-				_save->getPathfinding()->calculate(ba.actor, ba.target);
-				statePushBack(new UnitWalkBState(this, ba));
+				ba.target = Position(unit->getPosition().x + RNG::generate(-5,5), unit->getPosition().y + RNG::generate(-5,5), unit->getPosition().z);
+
+				if (i >= 10 && ba.target.z > 0) // if we've had more than our fair share of failures, try going down.
+				{
+					ba.target.z--;
+					if (i >= 15 && ba.target.z > 0) // still failing? try further down.
+					{
+						ba.target.z--;
+					}
+				}
+				if (_save->getTile(ba.target)) // sanity check the tile.
+				{
+					_save->getPathfinding()->calculate(ba.actor, ba.target);
+					if (_save->getPathfinding()->getStartDirection() != -1) // sanity check the path.
+					{
+						statePushBack(new UnitWalkBState(this, ba));
+						break;
+					}
+				}
 			}
 		}
 		break;
@@ -1113,17 +1130,17 @@ bool BattlescapeGame::handlePanickingUnit(BattleUnit *unit)
 		for (int i= 0; i < 4; i++)
 		{
 			ba.target = Position(unit->getPosition().x + RNG::generate(-5,5), unit->getPosition().y + RNG::generate(-5,5), unit->getPosition().z);
-			statePushBack(new UnitTurnBState(this, ba));
+			statePushBack(new UnitTurnBState(this, ba, false));
 		}
 		for (std::vector<BattleUnit*>::iterator j = unit->getVisibleUnits()->begin(); j != unit->getVisibleUnits()->end(); ++j)
 		{
 			ba.target = (*j)->getPosition();
-			statePushBack(new UnitTurnBState(this, ba));
+			statePushBack(new UnitTurnBState(this, ba, false));
 		}
 		if (_save->getTile(ba.target) != 0)
 		{
 			ba.weapon = unit->getMainHandWeapon();
-			if(ba.weapon && (_save->getDepth() != 0 || ba.weapon->getRules()->isWaterOnly() == false))
+			if (ba.weapon && (_save->getDepth() != 0 || ba.weapon->getRules()->isWaterOnly() == false))
 			{
 				if (ba.weapon->getRules()->getBattleType() == BT_FIREARM)
 				{
@@ -1505,7 +1522,7 @@ void BattlescapeGame::dropItem(const Position &position, BattleItem *item, bool 
 		item->getUnit()->setPosition(p);
 	}
 
-	if(newItem)
+	if (newItem)
 	{
 		_save->getItems()->push_back(item);
 	}
@@ -1539,7 +1556,7 @@ void BattlescapeGame::dropItem(const Position &position, BattleItem *item, bool 
  * @param newType The type of unit to convert to.
  * @return Pointer to the new unit.
  */
-BattleUnit *BattlescapeGame::convertUnit(BattleUnit *unit, std::string newType)
+BattleUnit *BattlescapeGame::convertUnit(BattleUnit *unit, const std::string &newType)
 {
 	getSave()->getBattleState()->showPsiButton(false);
 	// in case the unit was unconscious

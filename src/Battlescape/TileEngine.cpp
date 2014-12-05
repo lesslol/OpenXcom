@@ -260,7 +260,11 @@ bool TileEngine::calculateFOV(BattleUnit *unit)
 
 	if ((unit->getHeight() + unit->getFloatHeight() + -_save->getTile(unit->getPosition())->getTerrainLevel()) >= 24 + 4)
 	{
-		++pos.z;
+		Tile *tileAbove = _save->getTile(pos + Position(0,0,1));
+		if (tileAbove && tileAbove->hasNoFloor(0))
+		{
+			++pos.z;
+		}
 	}
 	for (int x = 0; x <= MAX_VIEW_DISTANCE; ++x)
 	{
@@ -921,11 +925,13 @@ bool TileEngine::canMakeSnap(BattleUnit *unit, BattleUnit *target)
 		// has a melee weapon and is in melee range
 		((weapon->getRules()->getBattleType() == BT_MELEE &&
 		validMeleeRange(unit, target, unit->getDirection()) &&
+		unit->getActionTUs(BA_HIT, weapon) > 0 &&
 		unit->getTimeUnits() > unit->getActionTUs(BA_HIT, weapon)) ||
 		// has a gun capable of snap shot with ammo
 		(weapon->getRules()->getBattleType() != BT_MELEE &&
 		weapon->getRules()->getTUSnap() &&
 		weapon->getAmmoItem() &&
+		unit->getActionTUs(BA_SNAPSHOT, weapon) > 0 &&
 		unit->getTimeUnits() > unit->getActionTUs(BA_SNAPSHOT, weapon))) &&
 		(unit->getOriginalFaction() != FACTION_PLAYER ||
 		_save->getGeoscapeSave()->isResearched(weapon->getRules()->getRequirements())) &&
@@ -987,7 +993,7 @@ bool TileEngine::tryReactionSnap(BattleUnit *unit, BattleUnit *target)
 		if (action.targeting && unit->spendTimeUnits(action.TU))
 		{
 			action.TU = 0;
-			_save->getBattleGame()->statePushBack(new UnitTurnBState(_save->getBattleGame(), action));
+			_save->getBattleGame()->statePushBack(new UnitTurnBState(_save->getBattleGame(), action, false));
 			_save->getBattleGame()->statePushBack(new ProjectileFlyBState(_save->getBattleGame(), action));
 			return true;
 		}
@@ -1008,7 +1014,7 @@ bool TileEngine::tryReactionSnap(BattleUnit *unit, BattleUnit *target)
 BattleUnit *TileEngine::hit(const Position &center, int power, ItemDamageType type, BattleUnit *unit)
 {
 	Tile *tile = _save->getTile(Position(center.x/16, center.y/16, center.z/24));
-	if(!tile)
+	if (!tile)
 	{
 		return 0;
 	}
@@ -2872,7 +2878,7 @@ Position TileEngine::getOriginVoxel(BattleAction &action, Tile *tile)
 		{
 			offset = 16;
 		}
-		else if(action.weapon == action.weapon->getOwner()->getItem("STR_LEFT_HAND") && !action.weapon->getRules()->isTwoHanded())
+		else if (action.weapon == action.weapon->getOwner()->getItem("STR_LEFT_HAND") && !action.weapon->getRules()->isTwoHanded())
 		{
 			offset = 8;
 		}

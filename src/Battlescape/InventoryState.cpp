@@ -236,9 +236,6 @@ InventoryState::InventoryState(bool tu, BattlescapeState *parent) : _tu(tu), _pa
 	_txtReact->setVisible(Options::showMoreStatsInInventoryView && !_tu);
 	_txtPSkill->setVisible(Options::showMoreStatsInInventoryView && !_tu);
 	_txtPStr->setVisible(Options::showMoreStatsInInventoryView && !_tu);
-
-	
-	_currentTooltip = "";
 }
 
 static void _clearInventoryTemplate(std::vector<EquipmentLayoutItem*> &inventoryTemplate)
@@ -842,7 +839,7 @@ void InventoryState::invMouseOver(Action *)
 	}
 	else
 	{
-		if (_currentTooltip == "")
+		if (_currentTooltip.empty())
 		{
 			_txtItem->setText(L"");
 		}

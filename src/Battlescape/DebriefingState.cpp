@@ -827,7 +827,7 @@ void DebriefingState::prepareDebriefing()
 		int value = (*j)->getValue();
 		Soldier *soldier = save->getSoldier((*j)->getId());
 		std::string type = (*j)->getType();
-		if ((*j)->getSpawnUnit() != "")
+		if (!(*j)->getSpawnUnit().empty())
 		{
 			type = (*j)->getSpawnUnit();
 		}
@@ -953,7 +953,7 @@ void DebriefingState::prepareDebriefing()
 				}
 
 				std::string corpseItem = (*j)->getArmor()->getCorpseGeoscape();
-				if ((*j)->getSpawnUnit() != "")
+				if (!(*j)->getSpawnUnit().empty())
 				{
 					corpseItem = _game->getRuleset()->getArmor(_game->getRuleset()->getUnit((*j)->getSpawnUnit())->getArmor())->getCorpseGeoscape();
 				}
@@ -1031,7 +1031,7 @@ void DebriefingState::prepareDebriefing()
 	}
 	if (aborted && battle->getMissionType() == "STR_BASE_DEFENSE" && !base->getCrafts()->empty())
 	{
-		for(std::vector<Craft*>::iterator i = base->getCrafts()->begin(); i != base->getCrafts()->end(); ++i)
+		for (std::vector<Craft*>::iterator i = base->getCrafts()->begin(); i != base->getCrafts()->end(); ++i)
 		{
 			addStat("STR_XCOM_CRAFT_LOST", 1, -(*i)->getRules()->getScore());
 		}
@@ -1154,53 +1154,59 @@ void DebriefingState::prepareDebriefing()
 		reequipCraft(base, craft, true);
 	}
 
-	// reequip crafts (only which is on the base) after a base defense mission
-	if (battle->getMissionType() == "STR_BASE_DEFENSE" && !_destroyBase) // we MUST check the missionType here, to avoid non-base-defense missions case
+	if (battle->getMissionType() == "STR_BASE_DEFENSE")
 	{
-		for (std::vector<Craft*>::iterator c = base->getCrafts()->begin(); c != base->getCrafts()->end(); ++c)
+		if (!_destroyBase)
 		{
-			if ((*c)->getStatus() != "STR_OUT")
-				reequipCraft(base, *c, false);
-		}
-		// Clearing base->getVehicles() objects, they don't needed anymore.
-		for (std::vector<Vehicle*>::iterator i = base->getVehicles()->begin(); i != base->getVehicles()->end(); ++i)
-			delete (*i);
-		base->getVehicles()->clear();
-	}
-	if (_destroyBase && _game->getSavedGame()->getMonthsPassed() != -1)
-	{
-		for (std::vector<Base*>::iterator i = _game->getSavedGame()->getBases()->begin(); i != _game->getSavedGame()->getBases()->end(); ++i)
-		{
-			if ((*i) == base)
+			// reequip crafts (only those on the base) after a base defense mission
+			for (std::vector<Craft*>::iterator c = base->getCrafts()->begin(); c != base->getCrafts()->end(); ++c)
 			{
-
+				if ((*c)->getStatus() != "STR_OUT")
+					reequipCraft(base, *c, false);
+			}
+			// Clear base->getVehicles() objects, they aren't needed anymore.
+			for (std::vector<Vehicle*>::iterator i = base->getVehicles()->begin(); i != base->getVehicles()->end(); ++i)
 				delete (*i);
-				_game->getSavedGame()->getBases()->erase(i);
-				break;
+			base->getVehicles()->clear();
+		}
+		else if (_game->getSavedGame()->getMonthsPassed() != -1)
+		{
+			for (std::vector<Base*>::iterator i = _game->getSavedGame()->getBases()->begin(); i != _game->getSavedGame()->getBases()->end(); ++i)
+			{
+				if ((*i) == base)
+				{
+
+					delete (*i);
+					_game->getSavedGame()->getBases()->erase(i);
+					break;
+				}
 			}
 		}
 
-		AlienMission* am = _game->getSavedGame()->getAlienMission(_region->getRules()->getType(), "STR_ALIEN_RETALIATION");
-		for (std::vector<Ufo*>::iterator i = _game->getSavedGame()->getUfos()->begin(); i != _game->getSavedGame()->getUfos()->end();)
+		if (_region)
 		{
-			if ((*i)->getMission() == am)
+			AlienMission* am = _game->getSavedGame()->getAlienMission(_region->getRules()->getType(), "STR_ALIEN_RETALIATION");
+			for (std::vector<Ufo*>::iterator i = _game->getSavedGame()->getUfos()->begin(); i != _game->getSavedGame()->getUfos()->end();)
 			{
-				delete *i;
-				i = _game->getSavedGame()->getUfos()->erase(i);
+				if ((*i)->getMission() == am)
+				{
+					delete *i;
+					i = _game->getSavedGame()->getUfos()->erase(i);
+				}
+				else
+				{
+					++i;
+				}
 			}
-			else
+			for (std::vector<AlienMission*>::iterator i = _game->getSavedGame()->getAlienMissions().begin();
+				i != _game->getSavedGame()->getAlienMissions().end(); ++i)
 			{
-				++i;
-			}
-		}
-		for (std::vector<AlienMission*>::iterator i = _game->getSavedGame()->getAlienMissions().begin();
-			i != _game->getSavedGame()->getAlienMissions().end(); ++i)
-		{
-			if ((AlienMission*)(*i) == am)
-			{
-				delete (*i);
-				_game->getSavedGame()->getAlienMissions().erase(i);
-				break;
+				if ((AlienMission*)(*i) == am)
+				{
+					delete (*i);
+					_game->getSavedGame()->getAlienMissions().erase(i);
+					break;
+				}
 			}
 		}
 	}
